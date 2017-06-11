@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hqu.dao.SitePassengerDao" >
+  <resultMap id="BaseResultMap" type="com.hqu.domain.Order" >
+    <result column="BCDM" property="BCDM" jdbcType="VARCHAR"/>
+    <result column="ZDDM" property="ZDDM" jdbcType="VARCHAR" />
+    <result column="RS" property="RS" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    BCDM, ZDDM, RS
+  </sql>
+  <insert id="insert">
+    insert into T_SitePassenger (BCDM, ZDDM) VALUES (#{BCDM}, #{ZDDM})
+  </insert>
+  <update id="add" parameterType="com.hqu.domain.SitePassenger">
+  	UPDATE T_SitePassenger
+  	SET RS=RS+#{RS}
+  	WHERE BCDM=#{BCDM} and ZDDM=#{ZDDM}
+  </update>
+  <update id="reduce" parameterType="com.hqu.domain.SitePassenger">
+  	UPDATE T_SitePassenger
+  	SET RS=RS-#{RS}
+  	WHERE BCDM=#{BCDM} and ZDDM=#{ZDDM}
+  </update>
+</mapper>

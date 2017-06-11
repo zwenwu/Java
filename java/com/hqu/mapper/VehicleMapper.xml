@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="com.hqu.dao.Vehicledao">
+       
+	
+	<select  id="search" parameterType="String" resultType="com.hqu.domain.Vehicle" > <!-- 初始化搜索，即搜素全部数据 -->
+	    
+	   <!--  select T_Vehicle.CPH,T_Brand_C.PPMC,T_MotorcycleType_C.CXMC,T_Color_C.CLYSMC,T_Company_C.SSGSMC,T_Vehicle.XSZFFRQ,T_Vehicle.XSZH,T_Vehicle.FDJH,T_VehicleStatus_C.CLZTMC 
+	     from ((((T_Vehicle join T_Brand_C on T_Vehicle.PPDM=T_Brand_C.PPDM) join  T_MotorcycleType_C
+	     on T_Vehicle.CXDM=T_MotorcycleType_C.CXDM) join T_Color_C on T_Vehicle.CLYSDM=T_Color_C.CLYSDM)
+	     join T_Company_C on T_Vehicle.SSGSDM=T_Company_C.SSGSDM ) join T_VehicleStatus_C on
+	     T_Vehicle.CLZTDM=T_VehicleStatus_C.CLZTDM   -->
+	     select * from V_Vehicle
+	     <where>
+	     1=1
+      <if test="_parameter!=null">
+        and CSDM = #{_parameter}
+      </if>
+     </where>
+     </select>
+     
+     <select id="selectPPMC" resultType="com.hqu.domain.Vehicle">  <!-- 品牌下拉框选项-->
+     select * from T_Brand_C order by PPDM
+     </select>
+	  <select id="selectCXMC" resultType="com.hqu.domain.Vehicle">  <!-- 车辆类型下拉框选项-->
+     select * from T_MotorcycleType_C order by CXDM
+     </select>
+      <select id="selectSSGSMC" resultType="com.hqu.domain.Vehicle">  <!-- 所属公司下拉框选项-->
+     select * from T_Company_C
+     </select>
+      <select id="selectCLZTMC" resultType="com.hqu.domain.Vehicle">  <!-- 状态下拉框选项-->
+     select * from T_VehicleStatus_C
+     </select>
+	 <select id="selectXHMC" resultType="com.hqu.domain.Vehicle">  <!-- 型号下拉框选项-->
+     select * from T_ModelNo_C
+     </select>
+      <select id="selectBSXLXMC" resultType="com.hqu.domain.Vehicle">  <!-- 变速箱下拉框选项-->
+     select * from T_GearBoxType_C
+     </select>
+     <select id="selectCLYSMC" resultType="com.hqu.domain.Vehicle">  <!-- 颜色下拉框选项-->
+     select * from T_Color_C
+     </select>
+     <select id="selectSJXM" resultType="com.hqu.domain.Vehicle">  <!-- 司机姓名下拉框选项-->
+     select * from T_Driver
+     </select>
+     
+	 <select id="searchall" resultType="com.hqu.domain.Vehicle">  
+     select * from V_Vehicle  <!-- 按条件查询 -->
+     <where>
+     <if test="CPH!=''">
+       CPH LIKE '%${CPH}%'
+     </if>
+     <if test="CPH==''">
+       1=1
+     </if>
+     <if test="PPDM!='all'.toString()">
+     and PPDM=#{PPDM}
+     </if>
+     <if test="CXDM!='all'.toString()">
+     and CXDM=#{CXDM}
+     </if>
+     <if test="SSGSDM!='all'.toString()">
+     and SSGSDM=#{SSGSDM}
+     </if>
+     <if test="CLZTDM!='all'.toString()">
+     and CLZTDM=#{CLZTDM}
+     </if>
+     <if test="CSDM!=null">
+        and CSDM = #{CSDM}
+      </if>
+     </where>
+     </select>
+	 
+	  <select id="appvehicleinfo" resultType="com.hqu.domain.Vehicle">  <!-- app接口，获取app需要的信息-->
+     select CPH,YDDH,SJXM,CLYSMC,CLZP1,CLZP2,CLZP3,CLZP4,CLZP5 from V_Vehicle
+     where CPH=(select CPH from T_Schedule where BCDM=(select BCDM from T_Order where DDH=#{DDH} ))
+     </select>
+     <select id="appselectCXMCnum" resultType="int">  <!-- //app接口，获取app需要车型的总数-->
+     select count(*) from T_MotorcycleType_C 	     
+     </select>
+	  <select id="appselectCXMC" resultType="String">  <!-- //app接口，获取app需要车型-->
+     select CXMC from T_MotorcycleType_C 	     
+       	limit #{param1},#{param2}
+     </select>
+     <select id="getBySSGSDM" resultType="com.hqu.domain.Vehicle">
+     select * from T_Vehicle where SSGSDM=#{SSGSDM}
+     </select>
+	
+     <select id="getVehicleByCPH" resultType="com.hqu.domain.Vehicle">
+     select * from V_Vehicle where CPH=#{CPH}
+     </select>
+	
+     
+	  <update id="stop" parameterType="com.hqu.domain.Vehicle"> <!-- 停用车辆-->
+		update T_Vehicle
+		 SET CLZTDM='1'
+		 WHERE CPH=#{CPH}
+	</update>
+	 <update id="start" parameterType="com.hqu.domain.Vehicle"> <!-- 启用车辆-->
+		update T_Vehicle
+		 SET CLZTDM='0'
+		 WHERE CPH=#{CPH}
+	</update>
+    
+     <delete id="delete" parameterType="com.hqu.domain.Vehicle">  <!-- 删除车辆-->
+		delete from T_Vehicle
+		where CPH = #{CPH}
+	</delete>
+    <insert id="addvehicle" parameterType="com.hqu.domain.Vehicle">  <!-- 添加车辆-->
+		insert into T_Vehicle (
+		     CPH,
+			 PPDM,
+			 CXDM,
+			 SSGSDM,
+			 CLZTDM,
+			 XHDM,
+			 CLYSDM,
+			 BSXLXDM,
+			 FDJH,
+			 XSZH,
+			 XSZFFRQ,
+			 ZWS,
+			 NOTE,
+			 YHZH,
+			 CSDM,
+			 CLLX,
+			 CLZP1,
+			 CLZP2,
+			 CLZP3,
+			 CLZP4,
+			 CLZP5
+			 
+			 )
+		values (
+		#{CPH}, 
+		#{PPDM},
+		#{CXDM},
+		#{SSGSDM}, 
+		#{CLZTDM},
+		#{XHDM},
+		#{CLYSDM},
+		#{BSXLXDM},
+		#{FDJH},
+		#{XSZH},
+		#{XSZFFRQ},
+		#{ZWS},
+		#{NOTE},
+		#{YHZH},
+		#{CSDM},
+		#{CLLX},
+		#{CLZP1},
+		#{CLZP2},
+		#{CLZP3},
+		#{CLZP4},
+		#{CLZP5}
+		)
+	</insert>
+	
+	<select id="editorvehicle" resultType="com.hqu.domain.Vehicle">  <!-- 显示修改时车辆已有的条件-->
+     select * from V_Vehicle where CPH=#{CPH}
+    </select>
+    <select id="editorvehiclebykey" resultType="com.hqu.domain.Vehicle">  <!-- 显示修改时车辆已有的条件-->
+     select * from V_Vehicle where CPH=#{CPH}
+    </select> 
+     <update id="updatevehicle" parameterType="com.hqu.domain.Vehicle">
+		update T_Vehicle
+		<set>  
+			 <if test="CLZP1 != null">
+			 CLZP1=#{CLZP1},
+			 </if>
+		      <if test="CLZP2 != null">
+			 CLZP2=#{CLZP2},
+			 </if>
+		      <if test="CLZP3 != null">
+			 CLZP3=#{CLZP3},
+			 </if>
+		      <if test="CLZP4 != null">
+			 CLZP4=#{CLZP4},
+			 </if>
+		      <if test="CLZP5 != null">
+			 CLZP5=#{CLZP5},
+			 </if>
+			 PPDM=#{PPDM},
+			 CXDM=#{CXDM},
+			 SSGSDM=#{SSGSDM},
+			 CLZTDM=#{CLZTDM},
+			 XHDM=#{XHDM},
+			 CLYSDM=#{CLYSDM},
+			 BSXLXDM=#{BSXLXDM},
+			 FDJH=#{FDJH},
+			 XSZH=#{XSZH},
+			 XSZFFRQ=#{XSZFFRQ},
+			 ZWS=#{ZWS},
+			 NOTE=#{NOTE},
+			 CSDM=#{CSDM},
+			 CLLX=#{CLLX},
+			 YHZH=#{YHZH}
+		  </set>   
+			 where CPH=#{CPH}
+		
+	</update>
+	
+	<select id="selectCSMC" resultType="com.hqu.domain.Vehicle">
+     select * from T_City_C 
+     </select>
+     
+     <select id="selectwebbus" resultType="com.hqu.domain.Vehicle">
+     select * from T_CarHailing
+      <where>
+     <if test="CPH!=''">
+       CPH LIKE '%${CPH}%'
+     </if>
+     <if test="CPH==''">
+       1=1
+     </if>
+     <if test="CXDM!=null">
+      and CXDM=#{CXDM}
+     </if>
+     <if test="CLZT!=null">
+       and CLZT = #{CLZT}
+      </if>
+     </where>
+     order by CLPXH
+     </select>
+     
+       <select id="selectwebbuslist" resultType="com.hqu.domain.Vehicle">
+     select * from V_Vehicle
+     where CLLX  LIKE '网约车'
+     </select>  
+     
+      <insert id="addwebbus" parameterType="com.hqu.domain.Vehicle"> 
+		insert into T_CarHailing(
+		     CPH,
+			 CXDM,
+			 SJDM,
+			 YDDH,
+			 CLPXH,
+			 CLZT
+			 
+			 )
+		values (
+		#{CPH}, 
+		#{CXDM},
+		#{SJDM},
+		#{YDDH}, 
+		#{CLPXH},
+		#{CLZT}
+		)
+	</insert> 
+	
+	<delete id="deletewebbus" parameterType="com.hqu.domain.Vehicle">  <!-- 删除车辆-->
+		delete from T_CarHailing
+		where CPH = #{CPH}
+	</delete>
+	
+	<update id="updatewebbusstatus" parameterType="com.hqu.domain.Vehicle"> <!-- 启用车辆-->
+		update T_CarHailing
+		 <set>
+		 <if test="CLZT!=null">
+           CLZT=#{CLZT},
+         </if>
+		  
+		 CLPXH=#{CLPXH}
+		 </set>
+		 WHERE CPH=#{CPH}
+	</update>
+</mapper>

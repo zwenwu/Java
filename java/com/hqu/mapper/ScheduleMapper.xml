@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hqu.dao.ScheduleDao">
+
+	<select id="selectSchedules" resultType="com.hqu.domain.Schedule">
+		select * from
+		V_Shedule_Route_Site where QDMC LIKE '%${QDMC}%' and ZDMC LIKE
+		'%${ZDMC}%' order by FCSJ
+	</select>
+
+	<select id="selectSchedulesByLinecode" parameterType="java.lang.String"
+		resultType="com.hqu.domain.Schedule">
+		select * from T_Schedule where XLDM = #{XLDM} order by FCSJ
+	</select>
+
+	<select id="findAllSchedules" resultType="com.hqu.domain.Schedule">
+		select * from
+		V_Schedule order by FCSJ
+	</select>
+
+	<select id="findAllDrivers" resultType="com.hqu.domain.Driver">
+		select * from V_Driver
+	</select>
+
+	<select id="findAllVehicle" resultType="com.hqu.domain.Vehicle">
+		select * from T_Vehicle
+	</select>
+
+	<select id="findAllSchedulesStatus" resultType="com.hqu.domain.ScheduleStatus">
+		select * from
+		T_ScheduleStatus_C where BCZTDM &lt; 9<!-- 跳过班次状态为9的无用班次 -->
+	</select>
+
+
+	<select id="findScheduleByLine" resultType="com.hqu.domain.Schedule">
+		select * from V_Schedule
+		<where>
+			<if test="param1!=''">
+				FCSJ &gt; #{param1}
+			</if>
+			<if test="param2!=''">
+				and FCSJ &lt; #{param2}
+			</if>
+			<if test="param3!=''">
+				and XLDM = #{param3}
+			</if>
+			<if test="param4!=-1">
+				and BCZTDM = #{param4}
+			</if>
+			<if test="param5!=-1">
+				and CSDM = #{param5}
+			</if>
+
+		</where>
+		and BCZTDM &lt; 9<!-- 跳过班次状态为9的无用班次 -->
+		order by FCSJ
+	</select>
+
+	<select id="findScheduleBySite_Line" resultType="com.hqu.domain.Schedule">
+		select * from V_Schedule
+		<where>
+			<if test="param1!=''">
+				FCSJ &gt; #{param1}
+			</if>
+			<if test="param2!=''">
+				and FCSJ &lt; #{param2}
+			</if>
+			<if test="param3!=''">
+				and (QDDM = #{param3} or ZDDM = #{param3} or TJZDDM LIKE '%${param3}%'
+				or XLMC LIKE '%${param4}%')
+			</if>
+			<if test="param4!='' and param3==''">
+				and XLMC LIKE '%${param4}%'
+			</if>
+ 			<if test="param5!=-1">
+				and BCZTDM = #{param5}
+			</if> 
+			<if test="param6!=-1">
+				and CSDM = #{param6}
+			</if>
+			and BCZTDM &lt; 9<!-- 跳过班次状态为9的无用班次 -->
+		</where>
+		order by FCSJ
+	</select>
+
+	<select id="getSiteCode" resultType="String">
+		select ZDDM from T_Site
+		<where>
+			<if test="ZDMC!=''">
+				ZDMC = #{param1}
+			</if>
+		</where>
+	</select>
+
+	<!-- APP上下班接口使用 -->
+	<select id="findScheduleByLine_Date" resultType="com.hqu.domain.Schedule">
+		select * from V_Schedule
+		<where>
+			<if test="param1!=''">
+				XLDM=#{param1}
+			</if>
+			<if test="param2!=''">
+				and
+				DATE_FORMAT(FCSJ,'%Y-%m-%d')=DATE_FORMAT(#{param2},'%Y-%m-%d')<!-- 只判断日期是否相同 -->
+			</if>
+			and BCZTDM=0
+		</where>
+		order by FCSJ
+	</select>
+
+	<select id="findScheduleByDate" resultType="com.hqu.domain.Schedule">
+		select * from V_Schedule
+		<where>
+			<if test="param1!=''">
+				and
+				DATE_FORMAT(FCSJ,'%Y-%m-%d')=DATE_FORMAT(#{param1},'%Y-%m-%d')
+			</if>
+			<if test="param2!=-1">
+				and CSDM = #{param2}
+			</if>
+			and BCZTDM=0
+		</where>
+		order by FCSJ
+	</select>
+
+	<select id="findScheduleByKey" resultType="com.hqu.domain.Schedule">
+		select * from V_Schedule
+		<where>
+			<if test="param1!=''">
+				BCDM=#{param1}
+			</if>
+		</where>
+		order by FCSJ
+	</select>
+
+	<update id="updateScheduleByKey" parameterType="com.hqu.domain.Schedule">
+		update T_Schedule
+		<set>
+			BCDM=#{BCDM},
+			XLDM=#{XLDM},
+			CPH=#{CPH},
+			SJYHZH=#{SJYHZH},
+			FCSJ=#{FCSJ},
+			QCPJ=#{QCPJ},
+			ZPS=#{ZPS},
+			SYPS=#{SYPS},
+			YTPS=#{YTPS},
+			BCZTDM=#{BCZTDM},
+			BCLXDM=#{BCLXDM},
+			NOTE=#{NOTE}
+		</set>
+		where BCDM = #{BCDM}
+	</update>
+
+	<update id="updateScheduleStatusToForbidden" parameterType="String">
+		update T_Schedule set BCZTDM = 1 where BCDM =#{id}
+	</update>
+
+	<update id="updateScheduleReturnUse" parameterType="String">
+		update T_Schedule set BCZTDM = 0 where BCDM =#{id}
+	</update>
+
+	<update id="updateScheduleTicket" parameterType="String">
+		update T_Schedule set SYPS = #{SYPS} where BCDM =#{BCDM}
+	</update>
+
+	<select id="findScheduleByXLDMFCSJ" resultType="com.hqu.domain.Schedule">
+		select * from T_Schedule where XLDM=#{XLDM} AND FCSJ=#{FCSJ}
+	</select>
+
+	<update id="updateScheduleTicketByXLDMFCSJ" parameterType="String">
+		update T_Schedule set SYPS = #{SYPS} where XLDM =#{XLDM} and
+		FCSJ=#{FCSJ}
+	</update>
+
+	<delete id="deleteByPrimaryKey" parameterType="String">
+		delete from T_Schedule where BCDM =#{id}
+	</delete>
+
+	<insert id="insertSchedule" parameterType="com.hqu.domain.Schedule">
+		insert into
+		T_Schedule(BCDM,XLDM,CPH,SJYHZH,FCSJ,QCPJ,ZPS,SYPS,YTPS,BCZTDM,BCLXDM,NOTE,ZPJG,YPJG)
+		<!-- values (#{BCDM},#{XLDM},#{CPH},#{SJXM},#{FCSJ},#{QCPJ},#{ZPS},#{SYPS},#{YTPS},#{BCZTDM},#{NOTE},#{ZPJG},#{YPJG}) -->
+		values (#{BCDM,jdbcType=VARCHAR},#{XLDM,jdbcType=VARCHAR},
+		#{CPH,jdbcType=CHAR},#{SJYHZH,jdbcType=VARCHAR},#{FCSJ,jdbcType=TIMESTAMP},
+		#{QCPJ,jdbcType=DECIMAL},#{ZPS,jdbcType=INTEGER},#{SYPS,jdbcType=INTEGER},
+		#{YTPS,jdbcType=INTEGER},#{BCZTDM,jdbcType=CHAR},#{BCLXDM,jdbcType=CHAR},#{NOTE,jdbcType=VARCHAR},
+		#{ZPJG,jdbcType=DECIMAL},#{YPJG,jdbcType=DECIMAL})
+	</insert>
+
+	<select id="selectByXLDMAndFCSJ" resultType="com.hqu.domain.Schedule">
+		select * from T_Schedule where XLDM=#{param1} AND FCSJ=#{param2}
+	</select>
+
+	<select id="findScheduleBySQL" parameterType="String"
+		resultType="com.hqu.domain.Schedule">
+		select * from V_Schedule where 1=1
+		<if test="_parameter!=null and _parameter!=''">
+			and ${_parameter}
+		</if>
+	</select>
+</mapper>

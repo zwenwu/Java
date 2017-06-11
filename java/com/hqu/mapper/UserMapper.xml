@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hqu.dao.UserDao">
+	<resultMap id="BaseResultMap" type="com.hqu.domain.User">
+		<id column="YHZH" property="YHZH" jdbcType="VARCHAR" />
+		<result column="YDDH" property="YDDH" jdbcType="VARCHAR" />
+		<result column="YHLBDM" property="YHLBDM" jdbcType="CHAR" />
+		<result column="YHMM" property="YHMM" jdbcType="VARCHAR" />
+		<result column="JSDM" property="JSDM" jdbcType="CHAR" />
+		<result column="Salt" property="Salt" jdbcType="CHAR" />
+		<result column="YHTX" property="YHTX" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		YHZH, YDDH, YHLBDM, YHMM, JSDM,Salt,YHTX
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="int">
+		select
+		<include refid="Base_Column_List" />
+		from user
+		where id = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="String">
+		delete from T_LoginUser
+		where YHZH = #{YHZH,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insertUser" parameterType="com.hqu.domain.User">
+		insert into T_LoginUser (YHZH, YDDH, YHLBDM,
+		YHMM, JSDM,Salt,YHTX)
+		values (#{YHZH,jdbcType=VARCHAR}, #{YDDH,jdbcType=VARCHAR},
+		#{YHLBDM,jdbcType=CHAR},
+		#{YHMM,jdbcType=VARCHAR}, #{JSDM,jdbcType=CHAR},#{Salt,jdbcType=CHAR},
+		#{YHTX,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.hqu.domain.User">
+		insert into user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="age != null">
+				age,
+			</if>
+			<if test="birthday != null">
+				birthday,
+			</if>
+			<if test="password != null">
+				password,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="age != null">
+				#{age,jdbcType=INTEGER},
+			</if>
+			<if test="birthday != null">
+				#{birthday,jdbcType=DATE},
+			</if>
+			<if test="password != null">
+				#{password,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.hqu.domain.User">
+		update user
+		<set>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="age != null">
+				age = #{age,jdbcType=INTEGER},
+			</if>
+			<if test="birthday != null">
+				birthday = #{birthday,jdbcType=DATE},
+			</if>
+			<if test="password != null">
+				password = #{password,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.hqu.domain.User">
+		update user
+		set name = #{name,jdbcType=VARCHAR},
+		age = #{age,jdbcType=INTEGER},
+		birthday = #{birthday,jdbcType=DATE},
+		password = #{password,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<select id="findUserByLoginName" resultMap="BaseResultMap"
+		parameterType="string">
+		select
+		<include refid="Base_Column_List" />
+		from T_LoginUser
+		where YHZH = #{YHZH,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="findUserByTelephone" resultMap="BaseResultMap" parameterType="String">
+	    select * from T_LoginUser where YDDH = #{telephone}
+	</select>
+	
+	<update id="updateUserPassword" >
+		update T_LoginUser
+		set YHMM = #{param2,jdbcType=VARCHAR}
+		where YHZH = #{param1,jdbcType=VARCHAR} 
+	</update>
+	
+	<update id="updateUserYDDH" >
+		update T_LoginUser
+		set YDDH = #{param2,jdbcType=VARCHAR}
+		where YHZH = #{param1,jdbcType=VARCHAR} 
+	</update>
+	
+	<insert id="insertAdminUser" parameterType="com.hqu.domain.User">
+	    insert into T_Admin(YHZH,XM,XBDM,YDDH,YX,NOTE) 
+	    values(#{YHZH},#{XM},#{XBDM},#{YDDH},#{YX},#{NOTE})
+	</insert>
+	
+	<select id="selectAllAdminUser" resultType="com.hqu.domain.User">
+	    select * from V_AdminLoginUser
+	</select>
+	
+	<select id="selectAdminUserByString" resultType="com.hqu.domain.User">
+	    select * from V_AdminLoginUser 
+	    <where>	   
+	        1=1     
+	        <if test="YHZH!=null and YHZH!=''">
+	           and  YHZH LIKE '%${YHZH}%'
+	        </if>	 
+	        <if test="JSDM!=null and JSDM!=''">
+	            and JSDM = #{JSDM}
+	        </if>       
+	    </where>
+	</select>
+	
+	<update id="updateAdminUser" parameterType="com.hqu.domain.User">
+	    update T_Admin
+		<set>
+			<if test="XM != null">
+				XM = #{XM,jdbcType=VARCHAR},
+			</if>
+			<if test="XBDM != null">
+				XBDM = #{XBDM,jdbcType=VARCHAR},
+			</if>
+			<if test="YDDH != null">
+				YDDH = #{YDDH,jdbcType=VARCHAR},
+			</if>
+			<if test="YX != null">
+				YX = #{YX,jdbcType=VARCHAR},
+			</if>			
+			<if test="NOTE != null">
+				NOTE = #{NOTE,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where YHZH = #{YHZH,jdbcType=VARCHAR}
+	</update>
+	
+	<delete id="deleteAdminUser" parameterType="String">
+	    delete from T_Admin
+		where YHZH = #{YHZH,jdbcType=VARCHAR}
+	</delete>
+	
+	<select id="selectAdminUserByKey" resultType="com.hqu.domain.User">
+	    select * from V_AdminLoginUser where YHZH = #{YHZH}
+	</select>
+	
+	<insert id="insertTelCode">
+	    insert into T_phoneCode (YDDH,YZM) values (#{YDDH},#{YZM})
+	</insert>
+	
+	<update id="updateTelCode">
+	    update T_phoneCode set YZM = #{YZM} where YDDH = #{YDDH}
+	</update>
+	
+	<select id="getUserByTel" parameterType="String" resultType="com.hqu.domain.User">
+	    select * from T_phoneCode where YDDH = #{YDDH}
+	</select>
+	
+	<select id="getDriverByYHZH" resultType="com.hqu.domain.Driver" parameterType="String">
+	    select * from V_Driver where YHZH = #{YHZH}
+	</select>
+	
+	<update id="updateDriverYDDH">
+	    update T_Driver set YDDH = #{YDDH} where YHZH = #{YHZH}
+	</update>
+	
+</mapper>

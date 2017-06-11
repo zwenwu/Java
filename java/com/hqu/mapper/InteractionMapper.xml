@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="com.hqu.dao.Interactiondao">
+       <select id="selectcity" resultType="com.hqu.domain.Interaction">
+         select CSDM,CSMC from T_City_C  
+       </select>
+	
+	     <select id="selectdata" resultType="com.hqu.domain.Interaction">
+         select * from V_RouteSponsor 
+         <where>
+         <if test ="param1!=''">
+        		 FQSJ &gt; #{param1}
+        	</if>
+        	<if test ="param2!=''">
+        		and FQSJ &lt; #{param2}
+        	</if>
+        	<if test="param3.CSDM!='all'.toString()">
+        	   and CSDM=#{param3.CSDM}
+        	</if>   
+            <if test="param3.FQXLZT!='all'.toString()">
+        	   and FQXLZT=#{param3.FQXLZT}
+        	</if> 
+         </where>  
+       </select>
+       
+       <delete id="deleteinteraction"  parameterType="com.hqu.domain.Interaction">
+       delete from T_RouteSponsor where FQXLDM=#{FQXLDM}
+       </delete>
+       
+       <update id="checkinteraction" parameterType="com.hqu.domain.Interaction">
+       update T_RouteSponsor set FQXLZT="0" where FQXLDM=#{FQXLDM}
+       </update>
+       
+       <select id="selectdatabyFQXLDM" parameterType="com.hqu.domain.Interaction" resultType="com.hqu.domain.Interaction">
+       select * from V_RouteSponsor where FQXLDM=#{FQXLDM}
+       </select>
+       
+        <select id="selectcomment" parameterType="com.hqu.domain.Interaction" resultType="com.hqu.domain.Interaction">
+       select * from T_RouteComment where FQXLDM=#{FQXLDM}
+       </select>
+       
+       <select id="appselectallDZXL" resultType="com.hqu.domain.Interaction">
+         select FQXLDM,FQXLMC,FQRDM,ZCRS,PLRS from V_RouteSponsor 
+         where CSDM=#{param1} and FQXLZT="1"
+         order by ZCRS desc
+         limit #{param2},#{param3}
+       </select>
+       <select id="appcountselectallDZXL" resultType="java.lang.Integer">
+         select count(*) from V_RouteSponsor 
+         where CSDM=#{param1} and FQXLZT="1" 
+       </select>
+       
+       <select id="appselectDZXLdetail" parameterType="com.hqu.domain.Interaction" resultType="com.hqu.domain.Interaction">
+         select * from V_RouteSponsor 
+         where FQXLDM=#{FQXLDM}
+       </select>
+       <select id="appselectcomment"  resultType="com.hqu.domain.Interaction">
+       select * from T_RouteComment where FQXLDM=#{param1} and PLNR is not null
+       order by PLSJ desc
+       limit #{param2},#{param3}
+       </select>
+       <select id="appcountselectcomment"  resultType="java.lang.Integer">
+       select count(*) from T_RouteComment where FQXLDM=#{param1} and PLNR is not null
+       
+       </select>
+       <insert id="appFQXL" parameterType="com.hqu.domain.Interaction">
+       insert into T_RouteSponsor(
+       CSDM,FQXLMC,FQRDM,FQSJ,FQXLZT,FCSJ,NOTE
+       )
+       values(
+       #{CSDM},#{FQXLMC},#{FQRDM},#{FQSJ},#{FQXLZT},#{FCSJ},#{NOTE}
+       )
+       </insert>
+      <insert id="insertsupport" parameterType="com.hqu.domain.Interaction">
+       insert into T_RouteComment(
+       FQXLDM,PLR,PLSJ,PLLX,PLNR
+       )
+       values(
+       #{FQXLDM},#{PLR},#{PLSJ},#{PLLX},#{PLNR}
+       )
+       </insert> 
+       <update id="updatesupport" parameterType="com.hqu.domain.Interaction">
+       update T_RouteComment
+       set PLSJ=#{PLSJ},PLLX=#{PLLX},PLNR=#{PLNR}
+       where PLR=#{PLR} and FQXLDM=#{FQXLDM}
+       </update>
+       
+       <select id="selectsupport" parameterType="com.hqu.domain.Interaction" resultType="com.hqu.domain.Interaction">
+       select * from T_RouteComment where FQXLDM=#{FQXLDM} and PLR=#{PLR}
+       </select>
+       <select id="appselectDZXLbyFQXLDM" resultType="com.hqu.domain.Interaction">
+         select * from V_RouteSponsor 
+         where FQXLDM=#{param1} and FQXLZT="1"
+       </select>
+       <update id="updateinteraction" parameterType="com.hqu.domain.Interaction">
+       update T_RouteSponsor
+       set ZCRS=#{ZCRS},PLRS=#{PLRS}
+       where FQXLDM=#{FQXLDM}
+       </update>
+        <select id="appselectallcomment"  resultType="com.hqu.domain.Interaction">
+       select * from T_RouteComment where FQXLDM=#{param1}
+       </select>
+       <update id="cancelsupportFQXL" parameterType="com.hqu.domain.Interaction">
+       update T_RouteComment
+       set PLSJ=#{PLSJ},PLLX=#{PLLX}
+       where PLR=#{PLR} and FQXLDM=#{FQXLDM}
+       </update>
+</mapper>

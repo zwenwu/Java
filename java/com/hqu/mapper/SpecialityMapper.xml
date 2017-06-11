@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hqu.dao.SpecialityDao">
+	<select id="findAllSpeciality"  resultType="com.hqu.domain.Speciality">
+		select * from V_Speciality
+	</select>
+	
+	<select id="findAllSpecialityType"  resultType="com.hqu.domain.Speciality">
+		select * from T_SpecialityTypes_C
+	</select>
+
+	<select id="findAllSpecialityStatus"  resultType="com.hqu.domain.Speciality">
+		select * from T_SpecialityStatus_C
+	</select>
+		
+	<select id="findSpecialityByKey" resultType="com.hqu.domain.Speciality">
+       	select * from V_Speciality
+       	<where>
+       		<if test="param1!=''">
+       			TCDM=#{param1} 
+       		</if>
+       	</where>
+    </select>
+    
+	<select id="findSpecialityByName" resultType="com.hqu.domain.Speciality">
+       	select * from V_Speciality
+       	<where>
+       		<if test="param1!=''">
+       			TCMC=#{param1} 
+       		</if>
+       	</where>
+    </select>		
+    
+	<select id="findSpecialityByCity" resultType="com.hqu.domain.Speciality">
+       	select * from V_Speciality
+       	<where>
+       		<if test="param1!=''">
+       			CSDM=#{param1} 
+       		</if>
+       	</where>
+    </select>
+        
+	<select id="findSpecialityByString" resultType="com.hqu.domain.Speciality">
+       	select * from V_Speciality
+       	<where>
+       		<if test="param1!=''">
+       			CSDM=#{param1} 
+       		</if>
+       		<if test="param2!=''">
+       			and TCMC LIKE '%${param2}%'
+       		</if>
+       		<if test="param1!=''">
+       			and TCLXDM =#{param3} 
+       		</if>
+       	</where>
+    </select>
+    
+    <update  id="updateSpeciality"  parameterType="com.hqu.domain.Speciality" >
+		update T_Speciality 
+		<set>
+			TCMC=#{TCMC},
+			CSDM=#{CSDM},
+			TCJG=#{TCJG},
+			TCJS=#{TCJS},
+			TCTP1=#{TCTP1},
+			TCTP2=#{TCTP2},
+			TCTP3=#{TCTP3},
+			TCTP4=#{TCTP4},
+			TCTP5=#{TCTP5},
+			TCLXDM=#{TCLXDM},
+			TCZTDM=#{TCZTDM}
+		</set>
+		where TCDM = #{TCDM}
+	</update>
+	
+    <update id="updateSpecialityStatusToForbidden" parameterType ="String">
+    	update T_Speciality set TCZTDM = 1 where TCDM =#{TCDM}
+    </update>
+    
+    <update id="updateSpecialityReturnUse" parameterType ="String">
+    	update T_Speciality set TCZTDM = 0 where TCDM =#{TCDM}
+    </update>
+    
+    <insert id="insertSchedule" parameterType="com.hqu.domain.Speciality">
+       	insert into T_Speciality(TCMC,CSDM,TCJG,TCJS,TCTP1,TCTP2,TCTP3,TCTP4,TCTP5,TCLXDM,TCZTDM,FBSJ)
+     	values (#{TCMC,jdbcType=VARCHAR},#{CSDM,jdbcType=CHAR},
+    	#{TCJG,jdbcType=DECIMAL},#{TCJS,jdbcType=VARCHAR},#{TCTP1,jdbcType=VARCHAR},
+    	#{TCTP2,jdbcType=VARCHAR},#{TCTP3,jdbcType=VARCHAR},#{TCTP4,jdbcType=VARCHAR},
+    	#{TCTP5,jdbcType=VARCHAR},#{TCLXDM,jdbcType=CHAR},#{TCZTDM,jdbcType=CHAR},#{FBSJ,jdbcType=DATE}
+    </insert> 
+    
+    <delete id="deleteByPrimaryKey" parameterType ="String">
+        delete from T_Speciality where TCDM =#{TCDM}
+    </delete>	
+</mapper>

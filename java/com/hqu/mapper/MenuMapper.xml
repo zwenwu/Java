@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hqu.dao.MenuDao">
+    <select id="selectAllMenu" resultType="com.hqu.domain.Menu">
+        select * from T_Function where Type = "menu"
+    </select>
+    
+    <insert id="insertRoleMenu" >
+    	insert into T_RoleFunction_M (JSDM,GNDM,QX) values(#{JSDM},#{GNDM},"1")
+    </insert>
+    
+    <!-- <update id="updatePermission" >
+    	update T_RoleFunction_M set QX =#{QX} where JSDM=#{JSDM} and GNDM = #{GNDM}
+    </update> -->
+    
+    <select id="selectPermission" resultType="com.hqu.domain.Menu">
+    	select * from V_MenuPermission where QX = '1' and JSDM = #{Role}
+    </select>
+    
+    <update id="updatePermission"  parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" open="" close="" separator=";">
+				update T_RoleFunction_M 
+				<set>
+				  QX=${item.QX}
+				</set>
+				where JSDM = ${item.JSDM} and GNDM =${item.GNDM}
+		 </foreach>    	
+    </update>
+    
+</mapper>

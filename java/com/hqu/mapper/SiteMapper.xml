@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hqu.dao.SiteDao">
+
+	<select id="selectAll" resultType="com.hqu.domain.Site" >
+		select *  from V_Site
+	</select>
+	
+		<select id="selectSiteByPK"  parameterType="java.lang.String" resultType="com.hqu.domain.Site"  >
+		select *  from V_Site where ZDDM=#{ZDDM}
+	</select>
+	<select id="selectSiteByName" parameterType="java.lang.String" resultType="com.hqu.domain.Site">
+		select* from V_Site where ZDMC=#{ZDMC} limit 1
+	</select>
+	<select id="selectSiteStatus" resultType="com.hqu.domain.SiteStatus" >
+		select *  from T_SiteStatus_C
+	</select>
+	
+	<select id="selectByConditions" parameterType="java.util.Map" resultType="com.hqu.domain.Site">
+		select * from V_Site where 1=1
+ 	<if test="ZDMC!=null and ZDMC != '' ">
+       		and ZDMC LIKE '%${ZDMC}%'
+     </if>
+     <if test="ZDDZ!=null and ZDDZ != '' ">
+       		and ZDDZ LIKE '%${ZDDZ}%'
+     </if>       
+     <if test="KSSJ != null and KSSJ != '' ">
+     	and FBSJ &gt; #{KSSJ}
+     </if>
+	<if test="JSSJ != null and JSSJ != '' ">
+		and FBSJ &lt; #{JSSJ}
+	</if> 
+	  <if test="ZDZTDM!=null and ZDZTDM != '-1'.toString()">
+     	and ZDZTDM = #{ZDZTDM}
+     </if>
+     <if test="CSDM !=null and CSDM != '-1'.toString()">
+     	and CSDM = #{CSDM}
+     </if>
+	</select>
+	
+	<update  id="updateSiteStatus"  parameterType="com.hqu.domain.Site" >
+		update T_Site 
+		set ZDZTDM = #{ZDZTDM}
+		where ZDDM = #{ZDDM}
+	</update>
+	
+		<update  id="updateSite"  parameterType="com.hqu.domain.Site" >
+		update T_Site 
+		<set>
+			<if test="ZDMC != null">
+				ZDMC = #{ZDMC},
+			</if>
+			<if test="ZDDZ != null">
+				ZDDZ = #{ZDDZ},
+			</if>
+			<if test="CSDM != null">
+				CSDM = #{CSDM},
+			</if>
+			<if test="ZDTP1 != null">
+				ZDTP1 = #{ZDTP1},
+			</if>
+			<if test="ZDTP2 != null">
+				ZDTP2 = #{ZDTP2},
+			</if>
+			<if test="ZDTP3 != null">
+				ZDTP3 = #{ZDTP3},
+			</if>
+			<if test="JD != null">
+				JD = #{JD},
+			</if>
+			<if test="CSDM != null">
+				WD = #{WD},
+			</if>
+			<if test="ZDZTDM != null">
+				ZDZTDM = #{ZDZTDM},
+			</if>
+		</set>
+		where ZDDM = #{ZDDM}
+	</update>
+	
+	<delete id="deleteSite" parameterType="com.hqu.domain.Site">
+		delete from T_Site
+		where ZDDM = #{ZDDM}
+		and ZDZTDM = '1'
+	</delete>
+	
+	<insert id="insertSite"  parameterType="com.hqu.domain.Site">
+		insert into T_Site (ZDMC,ZDDZ,CSDM,JD,WD,FBSJ,ZDZTDM,ZDTP1,ZDTP2,ZDTP3)
+		values (#{ZDMC},#{ZDDZ},#{CSDM},#{JD},#{WD},#{FBSJ},
+		#{ZDZTDM},#{ZDTP1},#{ZDTP2},#{ZDTP3})
+	</insert>
+</mapper>

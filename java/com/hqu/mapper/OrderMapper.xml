@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hqu.dao.OrderDao" >
+  <resultMap id="BaseResultMap" type="com.hqu.domain.Order" >
+    <id column="DDH" property="DDH" jdbcType="BIGINT" />
+    <result column="YDRQ" property="YDRQ"  />
+    <result column="XLDM" property="XLDM" jdbcType="VARCHAR" />
+    <result column="XLMC" property="XLMC" jdbcType="VARCHAR" />
+    <result column="BCDM" property="BCDM" jdbcType="VARCHAR" />
+    <result column="QDMC" property="QDMC" jdbcType="VARCHAR" />
+    <result column="QDDM" property="QDDM" jdbcType="VARCHAR" />
+    <result column="TJZDMC" property="TJZDMC" jdbcType="VARCHAR" />
+    <result column="ZDMC" property="ZDMC" jdbcType="VARCHAR" />
+    <result column="QCSJ" property="QCSJ"  />
+    <result column="FCSJ" property="FCSJ"  />
+    <result column="KSSJ" property="KSSJ"  />
+    <result column="JSSJ" property="JSSJ"  />
+    <result column="DJ" property="DJ" jdbcType="NUMERIC" />
+    <result column="RS" property="RS" jdbcType="INTEGER" />
+    <result column="ZJ" property="ZJ" jdbcType="NUMERIC" />
+    <result column="CLXQ" property="CLXQ" jdbcType="VARCHAR" />
+    <result column="APCL" property="APCL" jdbcType="VARCHAR" />
+    <result column="APSJ" property="APSJ" jdbcType="VARCHAR" />
+    <result column="FWPJ" property="FWPJ" jdbcType="INTEGER" />
+    <result column="LXR" property="LXR" jdbcType="VARCHAR" />
+    <result column="YDDH" property="YDDH" jdbcType="VARCHAR" />
+    <result column="YHZH" property="YHZH" jdbcType="VARCHAR" />
+    <result column="SCZT" property="SCZT" jdbcType="VARCHAR" />
+    <result column="DDLXDM" property="DDLXDM" jdbcType="VARCHAR" />
+    <result column="DDZTDM" property="DDZTDM" jdbcType="VARCHAR" />
+    <result column="NOTE" property="NOTE" jdbcType="VARCHAR" />
+    <result column="TKSJ" property="TKSJ" />
+    <result column="TKYY" property="TKYY" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    DDH, YDRQ, XLDM, XLMC, BCDM, QDMC, QDDM, TJZDMC, ZDMC, QCSJ, FCSJ, KSSJ, JSSJ, DJ, RS, ZJ, CLXQ, APCL, APSJ, FWPJ, LXR, YDDH, YHZH, SCZT, DDLXDM, DDZTDM, NOTE, TKSJ, TKYY
+  </sql>
+  <select id="searchAll" resultMap="BaseResultMap" resultType="com.hqu.domain.Order">
+    select * from T_Order
+  </select>
+  <select id="countByYHZH" resultType="java.lang.Integer">
+    select count(*) from T_Order WHERE YHZH= #{param1,jdbcType=VARCHAR} 
+    <if test="DDZTDM!=null and DDZTDM!='-1'">
+    and DDZTDM=#{DDZTDM} 
+    </if>
+  </select>
+  <select id="searchLike" resultMap="BaseResultMap" resultType="com.hqu.domain.Order">
+    select * from T_Order
+    <where>
+    YDRQ &gt; #{o1.YDRQ} and YDRQ &lt; #{o2.YDRQ}
+    <if test="o1.DDZTDM!=''">
+    and DDZTDM = #{o1.DDZTDM,jdbcType=VARCHAR}
+    </if>
+    <if test="o1.DDLXDM!=''">
+    and DDLXDM = #{o1.DDLXDM,jdbcType=VARCHAR}
+    </if>
+    <if test="o1.YHZH!=''">
+    and YHZH LIKE '%${o1.YHZH}%'
+    </if>
+    <if test="o1.DDH!=0">
+    and DDH = #{o1.DDH}
+    </if>
+    order by YDRQ desc
+    <if test="limit!=-1">
+    LIMIT #{limit}
+    </if>
+    </where>
+    
+  </select>
+  <select id="searchCard" resultMap="BaseResultMap" resultType="com.hqu.domain.Order">
+  	select * from T_Order WHERE DDZTDM=#{DDZTDM} and DDLXDM=#{DDLXDM} and JSSJ &lt; #{JSSJ}
+  </select>
+  <select id="searchByYHZH" resultMap="BaseResultMap" resultType="com.hqu.domain.Order">
+    select * from T_Order WHERE YHZH=#{param1} 
+    <if test="DDZTDM!=null and DDZTDM!='-1'">
+    and DDZTDM=#{DDZTDM} 
+    </if>
+    order by YDRQ desc
+    LIMIT #{param3}, #{param4}
+  </select>
+  <select id="searchCardByYHZH" resultMap="BaseResultMap" resultType="com.hqu.domain.Order">
+    select * from T_Order WHERE YHZH=#{param1} and (DDLXDM='2' OR DDLXDM='3') AND DDZTDM='2' and #{param2} &lt; JSSJ order by YDRQ desc LIMIT #{param3}, #{param4}
+  </select>
+  <select id="searchAllDDZT" resultType="java.lang.String">
+  	select DDZTMC from T_OrderStatus_C
+  </select>
+  <select id="searchAllDDLX" resultType="java.lang.String">
+  	select DDLXMC from T_OrderType_C
+  </select>
+  <select id="checkOrder" parameterType="com.hqu.domain.Order" resultMap="BaseResultMap" resultType="com.hqu.domain.Order">
+  	select * from T_Order where YHZH=#{YHZH} and DDH=#{DDH}
+  </select>
+  <select id="getById" resultMap="BaseResultMap" resultType="com.hqu.domain.Order">
+  	select * from T_Order where DDH=#{DDH}
+  </select>
+  <insert id="insert" parameterType="com.hqu.domain.Order"  useGeneratedKeys="true" keyProperty="DDH">
+    insert into T_Order (DDH, YDRQ, XLDM, XLMC, BCDM, QDMC, QDDM, TJZDMC, ZDMC, QCSJ, FCSJ, KSSJ, JSSJ, DJ, RS, ZJ, CLXQ, APCL, APSJ, FWPJ, LXR, YDDH, YHZH, SCZT, DDLXDM, DDZTDM, NOTE)
+    
+    values (#{DDH}, #{YDRQ}, #{XLDM,jdbcType=VARCHAR}, #{XLMC,jdbcType=VARCHAR}, #{BCDM,jdbcType=VARCHAR}, #{QDMC,jdbcType=VARCHAR}, #{QDDM,jdbcType=VARCHAR},
+      #{TJZDMC,jdbcType=VARCHAR}, #{ZDMC,jdbcType=VARCHAR}, #{QCSJ}, #{FCSJ}, #{KSSJ}, #{JSSJ}, #{DJ,jdbcType=NUMERIC},
+      #{RS,jdbcType=INTEGER}, #{ZJ,jdbcType=NUMERIC}, #{CLXQ,jdbcType=VARCHAR}, #{APCL,jdbcType=VARCHAR}, #{APSJ,jdbcType=VARCHAR},
+      #{FWPJ,jdbcType=INTEGER}, #{LXR,jdbcType=VARCHAR}, #{YDDH,jdbcType=VARCHAR}, #{YHZH,jdbcType=VARCHAR}, #{SCZT,jdbcType=VARCHAR},
+      #{DDLXDM,jdbcType=VARCHAR}, #{DDZTDM,jdbcType=VARCHAR}, #{NOTE,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateDDZTDMById">
+  	UPDATE T_Order
+  	SET DDZTDM=#{DDZTDM}
+  	WHERE DDH=#{DDH}
+  </update>
+  <update id="updateFWPJById">
+  	UPDATE T_Order
+  	SET FWPJ=#{FWPJ}
+  	WHERE DDH=#{DDH}
+  </update>
+  <update id="updateAPCLById">
+  	UPDATE T_Order
+  	SET APCL=#{APCL}
+  	WHERE DDH=#{DDH}
+  </update>
+  <update id="updateOutdated" parameterType="com.hqu.domain.Order">
+  	UPDATE T_Order SET DDZTDM='3' WHERE DDZTDM='2' AND JSSJ &lt; #{JSSJ}
+  </update>
+  <update id="updateZJById" parameterType="com.hqu.domain.Order">
+  	UPDATE T_Order
+  	SET ZJ=#{ZJ}
+  	WHERE DDH=#{DDH}
+  </update>
+  <update id="refund" parameterType="com.hqu.domain.Order">
+  	UPDATE T_Order
+  	SET DDZTDM='6', TKYY=#{TKYY}, TKSJ=#{TKSJ}
+  	WHERE DDH=#{DDH}
+  </update>
+  <update id="updateSCZT" parameterType="com.hqu.domain.Order">
+  	UPDATE T_Order
+  	SET SCZT=#{SCZT}
+  	WHERE DDH=#{DDH}
+  </update>
+  <select id="searchLikeForEvaluate" resultMap="BaseResultMap" resultType="com.hqu.domain.Order">
+    select * from V_Evaluate
+    <where>
+    YDRQ &gt; #{o1.YDRQ} and YDRQ &lt; #{o2.YDRQ}
+    <if test="o1.APSJ!=''">
+    and APSJ LIKE '%${o1.APSJ}%'
+    </if>
+    <if test="o1.LXR!=''">
+    and LXR LIKE '%${o1.LXR}%'
+    </if>
+	and DDZTDM ='4'
+    </where>
+  </select>
+  <select id="selectOutPay" parameterType="com.hqu.domain.Order" resultMap="BaseResultMap" resultType="com.hqu.domain.Order">
+  	select * from T_Order where DDZTDM='1' AND (DDLXDM='0' OR DDLXDM='2' OR DDLXDM='3') AND YDRQ &lt; #{YDRQ}
+  </select>
+  
+  <select id="orderStatistic"  parameterType="java.util.Map" resultType="com.hqu.model.BasicNameValue">
+  	select sum(ZJ) as Value,count(*) as Count
+  	from T_Order
+  	<where >
+  	YDRQ &gt;#{KSSJ} and YDRQ &lt;#{JSSJ} and (DDZTDM = '3' or DDZTDM = '4')
+  	<if test="DDLXDM!=null and DDLXDM!='' ">
+  	and DDLXDM = #{DDLXDM}
+  	</if>
+  	</where>
+  </select>
+
+<select id="schedulecarry"   resultType="com.hqu.domain.Schedule">
+  	select ZPS,SYPS
+  	from V_Schedule
+  	where
+  	FCSJ &gt; #{param1} and FCSJ &lt; #{param2} 
+  	
+  </select>
+  <select id="countSXB" resultType="com.hqu.domain.Order" >
+  	select *
+  	from T_Order
+  	where
+  	YDRQ &gt; #{param1} and YDRQ &lt; #{param2} and DDLXDM='0' and(DDZTDM='4' OR DDZTDM='3')
+  	
+  </select>
+  <select id="countYZP" resultType="com.hqu.domain.Order" >
+  	select *
+  	from T_Order
+  	where
+  	YDRQ &gt; #{param1} and YDRQ &lt; #{param2} and (DDLXDM='3' OR DDLXDM='2') and(DDZTDM='4' OR DDZTDM='3')
+  	
+  </select>
+  <select id="countBC"   resultType="com.hqu.domain.Order">
+  	select *
+  	from T_Order
+  	where
+  	YDRQ &gt; #{param1} and YDRQ &lt; #{param2} and DDLXDM='1' and(DDZTDM='4' OR DDZTDM='3')
+  	
+  </select>
+  <select id="countshift"   resultType="java.lang.Integer">
+  	select count(*)
+  	from V_Schedule
+  	where
+  	FCSJ &gt; #{param1} and FCSJ &lt; #{param2} 
+  	
+  </select>
+  <select id="countcharter"   resultType="java.lang.Integer">
+  	select count(*)
+  	from T_Order
+  	where
+  	YDRQ &gt; #{param1} and YDRQ &lt; #{param2} and DDLXDM='1' and(DDZTDM='4' OR DDZTDM='3')
+  	
+  </select>
+  <select id="selectUsingCard" parameterType="com.hqu.domain.Order" resultMap="BaseResultMap" resultType="com.hqu.domain.Order">
+  	select *
+  	from T_Order
+  	where
+  	(DDZTDM='1' OR DDZTDM='2') AND (DDLXDM='2' OR DDLXDM='3') AND KSSJ &lt; #{KSSJ}
+  </select>
+  <update id="updateBCDMByDDH">
+  	update T_Order
+  	set BCDM=#{BCDM},APCL=#{APCL}
+  	WHERE DDH=#{DDH}
+  </update>
+  <select id="countByYHZHBCDM" parameterType="com.hqu.domain.Order" resultType="java.lang.Integer">
+  	select count(*) from T_Order where YHZH = #{YHZH} AND BCDM = #{BCDM}
+  </select>
+</mapper>

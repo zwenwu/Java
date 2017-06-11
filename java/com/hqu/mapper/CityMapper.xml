@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hqu.dao.CityDao">
+<select id="selectAll" resultType="com.hqu.domain.City">
+	select * from T_City_C
+</select>
+
+	<select id="selectCityByName" resultType="com.hqu.domain.City">
+		select * from T_City_C where CSMC LIKE '%${_parameter}%'
+	</select>
+</mapper>

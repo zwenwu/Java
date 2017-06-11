@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hqu.dao.ScenicAreaDao">
+
+	<select id="selectAll" resultType="com.hqu.domain.ScenicArea" >
+		select *  from V_ScenicArea
+	</select>
+	
+		<select id="selectScenicAreaByPK"  parameterType="java.lang.String" resultType="com.hqu.domain.ScenicArea"  >
+		select *  from V_ScenicArea where JQDM=#{JQDM}
+	</select>
+	<select id="selectScenicAreaByName" parameterType="java.lang.String" resultType="com.hqu.domain.ScenicArea">
+		select* from V_ScenicArea where JQMC=#{JQMC} limit 1
+	</select>
+	
+	<select id="selectByConditions" parameterType="java.util.Map" resultType="com.hqu.domain.ScenicArea">
+		select * from V_ScenicArea where 1=1
+		  
+ 	<if test="JQMC!=null and JQMC != '' ">
+       		and JQMC LIKE '%${JQMC}%'
+     </if>
+         
+     <if test="KSSJ != null and KSSJ != '' ">
+     	and FBSJ &gt; #{KSSJ}
+     </if>
+	<if test="JSSJ != null and JSSJ != '' ">
+		and FBSJ &lt; #{JSSJ}
+	</if> 
+	   <if test="CSDM !=null and CSDM != '-1'.toString()">
+     	and CSDM = #{CSDM}
+     </if>
+	</select>
+	
+
+	
+		<update  id="updateScenicArea"  parameterType="com.hqu.domain.ScenicArea" >
+		update T_ScenicArea 
+		<set>
+			<if test="JQMC != null">
+				JQMC = #{JQMC},
+			</if>
+			
+			<if test="CSDM != null">
+				CSDM = #{CSDM},
+			</if>
+			<if test="JQTP1 != null">
+				JQTP1 = #{JQTP1},
+			</if>
+			<if test="JQTP2 != null">
+				JQTP2 = #{JQTP2},
+			</if>
+			<if test="JQTP3 != null">
+				JQTP3 = #{JQTP3},
+			</if>
+			<if test="JQTP4 != null">
+				JQTP4 = #{JQTP4},
+			</if>
+			<if test="JQTP5 != null">
+				JQTP5 = #{JQTP5},
+			</if>
+			<if test="JQTP6 != null">
+				JQTP6 = #{JQTP6},
+			</if>
+			<if test="JQTP7 != null">
+				JQTP7 = #{JQTP7},
+			</if>
+			<if test="JQTP8 != null">
+				JQTP8 = #{JQTP8},
+			</if>
+			<if test="JQTP9 != null">
+				JQTP9 = #{JQTP9},
+			</if>
+			<if test="JQTP10 != null">
+				JQTP10 = #{JQTP10},
+			</if>
+			<if test="JQJB != null">
+				JQJB = #{JQJB},
+			</if>
+			<if test="JQPJ != null">
+				JQPJ = #{JQPJ},
+			</if>
+		<if test="JQJS != null">
+				JQJS = #{JQJS},
+			</if>
+		
+			
+		</set>
+		where JQDM = #{JQDM}
+	</update>
+	
+	<delete id="deleteScenicArea" parameterType="com.hqu.domain.ScenicArea">
+		delete from T_ScenicArea
+		where JQDM = #{JQDM}
+		
+	</delete>
+	
+	<insert id="insertScenicArea"  parameterType="com.hqu.domain.ScenicArea">
+		insert into T_ScenicArea (JQMC,JQJB,CSDM,JQPJ,JQJS,FBSJ,JQTP1,JQTP2,JQTP3,JQTP4,JQTP5,JQTP6,JQTP7,JQTP8,JQTP9)
+		values (#{JQMC},#{JQJB},#{CSDM},#{JQPJ},#{JQJS},#{FBSJ},
+		#{JQTP1},#{JQTP2},#{JQTP3},#{JQTP4},#{JQTP5},#{JQTP6},#{JQTP7},#{JQTP8},#{JQTP9})
+	</insert>
+</mapper>

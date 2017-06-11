@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hqu.dao.TypeDao">
+	
+	<select id="selectUserType"  resultType="com.hqu.domain.Type">
+		select * from T_UserType_C
+	</select>
+	<select id="selectRoleType"  resultType="com.hqu.domain.Type">
+		select * from T_Role_C
+	</select>
+	<select id="selectSexType"  resultType="com.hqu.domain.Type">
+		select * from T_Sex_C
+	</select>
+	<select id="selectProvinceType"  resultType="com.hqu.domain.Type">
+		select * from T_Province_C
+	</select>
+	<select id="selectCityType"  resultType="com.hqu.domain.Type">
+		select * from T_City_C
+	</select>
+	<select id="selectAreaType"  resultType="com.hqu.domain.Type">
+		select * from T_Area_C
+	</select>
+	<select id="selectPassengerStatusType"  resultType="com.hqu.domain.Type">
+		select * from T_PassengerStatus_C
+	</select>
+	<select id="selectPassengerLevelType"  resultType="com.hqu.domain.Type">
+		select * from T_PassengerLevel_C
+	</select>
+	<select id="selectBrandType"  resultType="com.hqu.domain.Type">
+		select * from T_Brand_C
+	</select>
+	<select id="selectBrandDM"  parameterType="java.lang.String" resultType="com.hqu.domain.Type">
+		select * from T_Brand_C where PPMC=#{PPMC} limit 1
+	</select>
+	<select id="selectModelNoType"  resultType="com.hqu.domain.Type">
+		select * from T_ModelNo_C
+	</select>
+	<select id="selectGearBoxType"  resultType="com.hqu.domain.Type">
+		select * from T_GearBoxType_C
+	</select>
+	<select id="selectGearBoxDM"  parameterType="java.lang.String" resultType="com.hqu.domain.Type">
+		select * from T_GearBoxType_C where BSXLXMC=#{BSXLXMC} limit 1
+	</select>
+	<select id="selectCompanyType"  resultType="com.hqu.domain.Type">
+		select * from T_Company_C
+	</select>
+	<select id="selectCompanyDM"  parameterType="java.lang.String"  resultType="com.hqu.domain.Type">
+		select * from T_Company_C where SSGSMC=#{SSGSMC} limit 1
+	</select>
+	<select id="selectMotorcycleType"  resultType="com.hqu.domain.Type">
+		select * from T_MotorcycleType_C
+	</select>
+	<select id="selectMotorcycleDM"  parameterType="java.lang.String" resultType="com.hqu.domain.Type">
+		select * from T_MotorcycleType_C where CXMC=#{CXMC} limit 1
+	</select>
+	<select id="selectColorType"  resultType="com.hqu.domain.Type">
+		select * from T_Color_C
+	</select>
+	<select id="selectColorDM"  parameterType="java.lang.String" resultType="com.hqu.domain.Type">
+		select * from T_Color_C where CLYSMC=#{CLYSMC} limit 1
+	</select>
+	<select id="selectVehicleStatusType"  resultType="com.hqu.domain.Type">
+		select * from T_VehicleStatus_C
+	</select>
+	<select id="selectDriverType"  resultType="com.hqu.domain.Type">
+		select * from T_DriverType_C
+	</select>
+	<select id="selectDriverStatusType"  resultType="com.hqu.domain.Type">
+		select * from T_DriverStatus_C
+	</select>
+	<select id="selectSiteStatusType"  resultType="com.hqu.domain.Type">
+		select * from T_SiteStatus_C
+	</select>
+	<select id="selectRouteStatusType"  resultType="com.hqu.domain.Type">
+		select * from T_RouteStatus_C
+	</select>
+	<select id="selectScheduleStatusType"  resultType="com.hqu.domain.Type">
+		select * from T_ScheduleStatus_C
+	</select>
+	<select id="selectOrderType"  resultType="com.hqu.domain.Type">
+		select * from T_OrderType_C
+	</select>
+	<select id="selectOrderStatusType"  resultType="com.hqu.domain.Type">
+		select * from T_OrderStatus_C
+	</select>
+	<select id="selectMessageType"  resultType="com.hqu.domain.Type">
+		select * from T_MessageType_C
+	</select>
+	<select id="getCardststus"  resultType="com.hqu.domain.Type">
+		select * from T_CardStatus_C
+	</select>
+	<select id="getCardType"  resultType="com.hqu.domain.Type">
+		select * from T_CardType_C
+	</select>
+	<select id="getScheduleType"  resultType="com.hqu.domain.Type">
+		select * from T_ScheduleTypes_C
+	</select>
+	
+	<!-- =========================================================================== -->
+	<delete id="deleteUserType" parameterType="String">  
+		delete from T_UserType_C
+		where YHLBDM = #{_parameter}
+	</delete>
+	<delete id="deleteRoleType" parameterType="String">  
+		delete from T_Role_C
+		where JSDM = #{_parameter}
+	</delete>
+	<delete id="deleteSexType" parameterType="String">  
+		delete from T_Sex_C
+		where XBDM = #{_parameter}
+	</delete>
+	<delete id="deleteProvinceType" parameterType="String">  
+		delete from T_Province_C
+		where SDM = #{_parameter}
+	</delete>
+	<delete id="deleteCityType" parameterType="String">  
+		delete from T_City_C
+		where CSDM = #{_parameter}
+	</delete>
+	<delete id="deleteAreaType" parameterType="String">  
+		delete from T_Area_C
+		where QDM = #{_parameter}
+	</delete>
+	<delete id="deletePassengerStatusType" parameterType="String">  
+		delete from T_PassengerStatus_C
+		where CKZTDM = #{_parameter}
+	</delete>
+	<delete id="deletePassengerLevelType" parameterType="String">  
+		delete from T_PassengerLevel_C
+		where CKJBDM = #{_parameter}
+	</delete>
+	
+	
+	<delete id="deleteBrandType" parameterType="String">  
+		delete from T_Brand_C
+		where PPDM = #{_parameter}
+	</delete>
+	<delete id="deleteModelNoType" parameterType="String">  
+		delete from T_ModelNo_C
+		where XHDM = #{_parameter}
+	</delete>
+	<delete id="deleteGearBoxType" parameterType="String">  
+		delete from T_GearBoxType_C
+		where BSXLXDM = #{_parameter}
+	</delete>
+	<delete id="deleteCompanyType" parameterType="String">  
+		delete from T_Company_C
+		where SSGSDM = #{_parameter}
+	</delete>
+	<delete id="deleteMotorcycleType" parameterType="String">  
+		delete from T_MotorcycleType_C
+		where CXDM = #{_parameter}
+	</delete>
+	<delete id="deleteColorType" parameterType="String">  
+		delete from T_Color_C
+		where CLYSDM = #{_parameter}
+	</delete>
+	
+	
+	<delete id="deleteVehicleStatusType" parameterType="String">  
+		delete from T_VehicleStatus_C
+		where CLZTDM = #{_parameter}
+	</delete>
+	<delete id="deleteDriverType" parameterType="String">  
+		delete from T_DriverType_C
+		where SJLXDM = #{_parameter}
+	</delete>
+	<delete id="deleteDriverStatusType" parameterType="String">  
+		delete from T_DriverStatus_C
+		where SJZTDM = #{_parameter}
+	</delete>
+	<delete id="deleteSiteStatusType" parameterType="String">  
+		delete from T_SiteStatus_C
+		where ZDZTDM = #{_parameter}
+	</delete>
+	<delete id="deleteRouteStatusType" parameterType="String">  
+		delete from T_RouteStatus_C
+		where XLZTDM = #{_parameter}
+	</delete>
+	<delete id="deleteScheduleStatusType" parameterType="String">  
+		delete from T_ScheduleStatus_C
+		where BCZTDM = #{_parameter}
+	</delete>
+	
+	
+	<delete id="deleteOrderType" parameterType="String">  
+		delete from T_OrderType_C
+		where DDLXDM = #{_parameter}
+	</delete>
+	<delete id="deleteOrderStatusType" parameterType="String">  
+		delete from T_OrderStatus_C
+		where DDZTDM = #{_parameter}
+	</delete>
+	<delete id="deleteMessageType" parameterType="String">  
+		delete from T_MessageType_C
+		where XXLXDM = #{_parameter}
+	</delete>
+	<delete id="deleteCardststus" parameterType="String">  
+		delete from T_CardStatus_C
+		where KPZTDM= #{_parameter}
+	</delete>
+	<delete id="deleteCardType" parameterType="String">  
+		delete from T_CardType_C
+		where KPLXDM = #{_parameter}
+	</delete>
+	<!-- =========================================================================== -->
+	<insert id="addUserType" parameterType="com.hqu.domain.Type">  
+		insert into T_UserType_C
+		(YHLBDM,
+		YHLBMC)
+		values(
+		#{YHLBDM},
+		#{YHLBMC})
+	</insert>
+	<insert id="addRoleType" parameterType="com.hqu.domain.Type">  
+		insert into T_Role_C
+		(JSDM,
+		JSMC)
+		values(
+		#{JSDM},
+		#{JSMC})
+	</insert>
+	<insert id="addSexType" parameterType="com.hqu.domain.Type">  
+		insert into T_Sex_C
+		(XBDM,
+		XBMC)
+		values(
+		#{XBDM},
+		#{XBMC})
+	</insert>
+	<insert id="addProvinceType" parameterType="com.hqu.domain.Type">  
+		insert into T_Province_C
+		(SDM,
+		SMC)
+		values(
+		#{SDM},
+		#{SMC})
+	</insert>
+	<insert id="addCityType" parameterType="com.hqu.domain.Type">  
+		insert into T_City_C
+		(CSDM,
+		CSMC,
+		SDM)
+		values(
+		#{CSDM},
+		#{CSMC},
+		#{SDM})
+	</insert>
+	<insert id="addAreaType" parameterType="com.hqu.domain.Type">  
+		insert into T_Area_C
+		(QDM,
+		QMC,
+		CSDM)
+		values(
+		#{QDM},
+		#{QMC},
+		#{CSDM})
+	</insert>
+	<insert id="addPassengerStatusType" parameterType="com.hqu.domain.Type">  
+		insert into T_PassengerStatus_C
+		(CKZTDM,
+		CKZTMC)
+		values(
+		#{CKZTDM},
+		#{CKZTMC})
+	</insert>
+	<insert id="addPassengerLevelType" parameterType="com.hqu.domain.Type">  
+		insert into T_PassengerLevel_C
+		(CKJBDM,
+		CKJBMC,
+		CKJBJF)
+		values(
+		#{CKJBDM},
+		#{CKJBMC},
+		#{CKJBJF})
+	</insert>
+	
+	
+	<insert id="addBrandType" parameterType="com.hqu.domain.Type">  
+		insert into T_Brand_C
+		(PPDM,
+		PPMC)
+		values(
+		#{PPDM},
+		#{PPMC})
+	</insert>
+	<insert id="addModelNoType" parameterType="com.hqu.domain.Type">  
+		insert into T_ModelNo_C
+		(XHDM,
+		XHMC)
+		values(
+		#{XHDM},
+		#{XHMC})
+	</insert>
+	<insert id="addGearBoxType" parameterType="com.hqu.domain.Type">  
+		insert into T_GearBoxType_C
+		(BSXLXDM,
+		BSXLXMC)
+		values(
+		#{BSXLXDM},
+		#{BSXLXMC})
+	</insert>
+	<insert id="addCompanyType" parameterType="com.hqu.domain.Type">  
+		insert into T_Company_C
+		(SSGSDM,
+		SSGSMC)
+		values(
+		#{SSGSDM},
+		#{SSGSMC})
+	</insert>
+	<insert id="addMotorcycleType" parameterType="com.hqu.domain.Type">  
+		insert into T_MotorcycleType_C
+		(CXDM,
+		CXMC)
+		values(
+		#{CXDM},
+		#{CXMC})
+	</insert>
+	<insert id="addColorType" parameterType="com.hqu.domain.Type">  
+		insert into T_Color_C
+		(CLYSDM,
+		CLYSMC)
+		values(
+		#{CLYSDM},
+		#{CLYSMC})
+	</insert>
+	
+	
+	<insert id="addVehicleStatusType" parameterType="com.hqu.domain.Type">  
+		insert into T_VehicleStatus_C
+		(CLZTDM,
+		CLZTMC)
+		values(
+		#{CLZTDM},
+		#{CLZTMC})
+	</insert>
+	<insert id="addDriverType" parameterType="com.hqu.domain.Type">  
+		insert into T_DriverType_C
+		(SJLXDM,
+		SJLXMC)
+		values(
+		#{SJLXDM},
+		#{SJLXMC})
+	</insert>
+	<insert id="addDriverStatusType" parameterType="com.hqu.domain.Type">  
+		insert into T_DriverStatus_C
+		(SJZTDM,
+		SJZTMC)
+		values(
+		#{SJZTDM},
+		#{SJZTMC})
+	</insert>
+	<insert id="addSiteStatusType" parameterType="com.hqu.domain.Type">  
+		insert into T_SiteStatus_C
+		(ZDZTDM,
+		ZDZTMC)
+		values(
+		#{ZDZTDM},
+		#{ZDZTMC})
+	</insert>
+	<insert id="addRouteStatusType" parameterType="com.hqu.domain.Type">  
+		insert into T_RouteStatus_C
+		(XLZTDM,
+		XLZTMC)
+		values(
+		#{XLZTDM},
+		#{XLZTMC})
+	</insert>
+	<insert id="addScheduleStatusType" parameterType="com.hqu.domain.Type">  
+		insert into T_ScheduleStatus_C
+		(BCZTDM,
+		BCZTMC)
+		values(
+		#{BCZTDM},
+		#{BCZTMC})
+	</insert>
+	
+	
+	<insert id="addOrderType" parameterType="com.hqu.domain.Type">  
+		insert into T_OrderType_C
+		(DDLXDM,
+		DDLXMC)
+		values(
+		#{DDLXDM},
+		#{DDLXMC})
+	</insert>
+	<insert id="addOrderStatusType" parameterType="com.hqu.domain.Type">  
+		insert into T_OrderStatus_C
+		(DDZTDM,
+		DDZTMC)
+		values(
+		#{DDZTDM},
+		#{DDZTMC})
+	</insert>
+	<insert id="addMessageType" parameterType="com.hqu.domain.Type">  
+		insert into T_MessageType_C
+		(XXLXDM,
+		XXLXMC)
+		values(
+		#{XXLXDM},
+		#{XXLXMC})
+	</insert>
+	<insert id="addCardststus" parameterType="com.hqu.domain.Type">  
+		insert into T_CardStatus_C
+		(KPZTDM,
+		KPZTMC)
+		values(
+		#{KPZTDM},
+		#{KPZTMC})
+	</insert>
+	<insert id="addCardType" parameterType="com.hqu.domain.Type">  
+		insert into T_CardType_C
+		(KPLXDM,
+		KPLXMC)
+		values(
+		#{KPLXDM},
+		#{KPLXMC})
+	</insert>
+</mapper>

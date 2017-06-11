@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hqu.dao.MessageDao">
+	
+	<select id="selectAllMessage"  resultType="com.hqu.domain.Message">
+		select * from T_Message 
+	</select>
+	<select id="selectMessageByReceiver" resultType="com.hqu.domain.Message">
+		select * from V_Message  Where JSR =#{param1} order by FSSJ DESC limit #{param2},#{param3} 
+	</select>
+	
+	<select id="selectMessageCount" parameterType="java.lang.String" resultType="int">
+	    select count(*) from T_Message where JSR =#{JSR}
+	</select>
+	
+	<update  id="updateMessageStatus"  parameterType="java.lang.Integer" >
+		update T_Message set XXZT="已读" Where XXLSH=#{XXLSH}
+	</update>
+	<select id="selectXXLXMC" resultType="com.hqu.domain.Message"><!--下拉框消息类型  -->
+	 select * from T_MessageType_C
+	</select>
+	<select id="selectJSRLX" resultType="com.hqu.domain.Message"><!--下拉框接收人类型选项  -->
+	 select CKJBDM,CKJBMC from T_PassengerLevel_C
+	</select>
+	<select id="selectall" resultType="com.hqu.domain.Message"><!--查找时间内的消息  -->
+	 select * from V_Message 
+     <where>        	
+        	<if test ="param1!=''">
+        		 FSSJ &gt; #{param1}
+        	</if>
+        	<if test ="param2!=''">
+        		and FSSJ &lt; #{param2}
+        	</if>   
+        </where>
+	</select>
+	<select id="selectconditions" resultType="com.hqu.domain.Message"><!--查找条件查询  -->
+	 select * from V_Message 
+     <where>        	
+        	<if test ="param2!=''">
+        		 FSSJ &gt; #{param2}
+        	</if>
+        	<if test ="param3!=''">
+        		and FSSJ &lt; #{param3}
+        	</if>  
+        	<if test="param1.FSR!=''">
+        	    and FSR LIKE '%${param1.FSR}%'
+        	</if>
+        	<if test="param1.JSR!=''">
+        	    and JSR LIKE '%${param1.JSR}%'
+        	</if>  
+        	<if test="param1.XXLXDM!='all'.toString()">
+        	    and XXLXDM=#{param1.XXLXDM}
+        	</if> 
+        	<if test="param1.XXZT=='0'.toString()">
+        	    and XXZT LIKE '已读'
+        	</if> 
+        	<if test="param1.XXZT=='1'.toString()">
+        	    and XXZT LIKE '未读'
+        	</if>
+        </where>
+	</select>
+	<delete id="deleteMessage" parameterType="com.hqu.domain.Message"><!--删除消息  -->
+	delete from T_Message where XXLSH=#{XXLSH}
+	</delete>
+	
+	 <select id="selectpassenger" resultType="com.hqu.domain.Message"><!--接收人下拉框  --> 
+	 select YHZH,CKXM from T_Passenger 
+     
+	</select> 
+	<select id="selectJSR" resultType="String" parameterType="String"><!--查找消息接收人  -->
+	 select YHZH from T_Passenger 
+     <where>        	
+        	<if test ="_parameter=='all'">
+        		 1=1
+        	</if>
+        	<if test ="_parameter!='all'">
+        		CKJBDM=#{_parameter}
+        	</if>   
+        </where>
+	</select>
+	
+	<insert id="insertMessage" parameterType="com.hqu.domain.Message">
+	 insert into T_Message(
+	 XXLXDM,
+	 FSSJ,
+	 FSR,
+	 JSR,
+	 XXNR,
+	 XXZT
+	 )
+	 values(
+	 #{XXLXDM},
+	 #{FSSJ},
+	 #{FSR},
+	 #{JSR},
+	 #{XXNR},
+	 #{XXZT}
+	 
+	 )
+	
+	</insert>
+	<select id="selectdetail" resultType="com.hqu.domain.Message"><!--某条消息的具体详情  -->
+	 select * from V_Message where XXLSH=#{XXLSH}
+	</select>
+	<select id="getnewMessage" resultType="com.hqu.domain.Message">
+		select * from V_Message Where JSR =#{param1} and XXZT LIKE '未读'
+	</select>
+</mapper>

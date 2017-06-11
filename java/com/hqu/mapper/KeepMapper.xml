@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hqu.dao.KeepDao">
+<select id="selectKey" resultType="int">
+select count(*) from T_Keep where YHZH=#{YHZH} and XLDM=#{XLDM}
+</select>
+<insert id="insertRoute" parameterType="com.hqu.domain.Keep">
+insert into T_Keep(YHZH,XLDM,SCSJ,SCZT) 
+values(#{YHZH,jdbcType=VARCHAR},#{XLDM,jdbcType=VARCHAR},#{SCSJ,jdbcType=DATE},#{SCZT,jdbcType=CHAR})
+</insert>
+<select id="showRoute"  resultType="com.hqu.domain.Line">
+select * from V_Keep where YHZH=#{YHZH} and SCZT=0 limit #{param2},#{param3}                         
+</select>
+<select id="sumPage" resultType="int">
+select count(*) from T_Keep where YHZH=#{YHZH} and SCZT=0
+</select>
+<delete id="deleteRoute" parameterType="com.hqu.domain.Keep">
+delete from T_keep where YHZH=#{YHZH} and XLDM=#{XLDM}
+</delete>
+</mapper>

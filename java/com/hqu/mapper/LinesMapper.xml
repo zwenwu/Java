@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hqu.dao.LineDao">
+	<select id="findAllLine" resultType="com.hqu.domain.Line">
+        select * from V_Route
+    </select>
+    <!-- api -->
+	<select id="findUsingLine" resultType="com.hqu.domain.Line">
+	    select * from V_Route where XLZTDM = 0 and CSDM =#{CSDM} and XLLX='0'
+	</select>
+    <select id="findLinesByString" resultType="com.hqu.domain.Line">
+        select * from V_Route
+        <where>        	
+        	<if test ="param1.FBSJ!='' and param1.FBSJ!=null">
+        		 FBSJ &gt; #{param1.FBSJ}
+        	</if>
+        	<if test ="param2!='' and param2!=null">
+        		and FBSJ &lt; #{param2}
+        	</if>   
+        	<if test="param1.XLMC!=null and param1.XLMC!=''">
+        		and XLMC LIKE '%${param1.XLMC}%'
+        	</if>    
+        	<if test ="param1.XLZTDM!=null and param1.XLZTDM!=''">
+        		and XLZTDM = #{param1.XLZTDM}
+        	</if> 	 
+        	<if test ="param1.CSDM!=null and param1.CSDM!=''">
+        		and CSDM = #{param1.CSDM}
+        	</if> 
+        	<if test="param1.XLLX!=null and param1.XLLX!=''">
+        	    and XLLX = #{param1.XLLX}
+        	</if>
+        </where>
+    </select>
+    
+    <update id="updateRouteStatusToForbidden" parameterType ="String">
+    	update T_Route set XLZTDM = 1 where XLDM =#{id}
+    </update>
+    
+    <update id="updateRouteReturnUse" parameterType ="String">
+    	update T_Route set XLZTDM = 0 where XLDM =#{id}
+    </update>
+    
+    <delete id="deleteByPrimaryKey" parameterType ="String">
+        delete from T_Route where XLDM =#{id}
+    </delete>
+    
+    <select id="findRouteStatus" resultType ="com.hqu.domain.RouteStatus">
+    	select * from T_RouteStatus_C
+    </select>
+    
+    <insert id="insertLine" parameterType ="com.hqu.domain.Line">
+        insert into T_Route(XLDM,XLMC,QDDM,TJZDDM,ZDDM,FBSJ,XLZTDM,CSDM,NOTE,XLLX)
+        values (#{XLDM,jdbcType=VARCHAR}, #{XLMC,jdbcType=VARCHAR},
+		#{QDDM,jdbcType=CHAR},
+		#{TJZDDM,jdbcType=VARCHAR}, #{ZDDM,jdbcType=CHAR},#{FBSJ,jdbcType=TIMESTAMP},
+		#{XLZTDM,jdbcType=CHAR},#{CSDM,jdbcType=CHAR},#{NOTE,jdbcType=VARCHAR},#{XLLX,jdbcType=VARCHAR})
+		
+    </insert>
+    
+    <select id = "apiFindLinesByString" resultType ="com.hqu.domain.Line">
+        select XLDM,XLMC,QDDM,SQDMC,ZDDM,EZDMC,TJZDDM from V_Route where XLLX='0'
+        <!-- <where>  
+        	<if test="SQDMC!=null and SQDMC!=''">
+        	    SQDMC LIKE '%${SQDMC}%'
+        	</if>    
+        	<if test ="EZDMC!=null and EZDMC!=''">
+        		and EZDMC LIKE '%${EZDMC}%'
+        	</if> 	 
+        	<if test ="CSMC!=null and CSMC!=''">
+        		and CSMC LIKE '%${CSMC}%'
+        	</if> 
+        </where> -->
+    </select>
+    
+    <select id = "findLineByPrimaryKey" resultType ="com.hqu.domain.Line" parameterType ="String">
+        select * from V_Route where  XLDM =#{XLDM}
+        	
+    </select>
+    
+    <update id="updateLineByKey" parameterType ="com.hqu.domain.Line">
+        update T_Route set 
+        XLMC = #{XLMC,jdbcType=VARCHAR},
+        QDDM = #{QDDM,jdbcType=VARCHAR},
+        TJZDDM =#{TJZDDM,jdbcType=VARCHAR},
+        ZDDM =#{ZDDM,jdbcType=VARCHAR},
+        XLZTDM = #{XLZTDM,jdbcType=VARCHAR},
+        CSDM = #{CSDM,jdbcType=VARCHAR},
+        NOTE = #{NOTE,jdbcType=VARCHAR},
+        XLLX = #{XLLX}
+        where XLDM = #{XLDM,jdbcType=VARCHAR}
+    </update>
+    <!-- 景区 -->
+    <select id="findScenicRoute" resultType="com.hqu.domain.Line">
+        select * from V_ScenicRoute
+        <where>        	
+        	<if test ="param1.FBSJ!=''">
+        		 FBSJ &gt; #{param1.FBSJ}
+        	</if>
+        	<if test ="param2!=''">
+        		and FBSJ &lt; #{param2}
+        	</if>   
+        	<if test="param1.XLMC!=null and param1.XLMC!=''">
+        		and XLMC LIKE '%${param1.XLMC}%'
+        	</if>    
+        	<if test ="param1.XLZTDM!=null and param1.XLZTDM!=''">
+        		and XLZTDM = #{param1.XLZTDM}
+        	</if> 	 
+        	<if test ="param1.CSDM!=null and param1.CSDM!=''">
+        		and CSDM = #{param1.CSDM}
+        	</if> 
+        </where>
+    </select>
+    <select id = "findScenicLineByPrimaryKey" resultType ="com.hqu.domain.Line" parameterType ="String">
+        select * from V_ScenicRoute where  XLDM =#{XLDM}
+    </select>
+</mapper>

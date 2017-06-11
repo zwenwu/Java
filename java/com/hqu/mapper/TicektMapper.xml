@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hqu.dao.TicketDao">
+
+	<select id="findAllTicket" resultType="com.hqu.domain.Ticket">
+        select * from V_Ticket
+    </select>
+    
+    <select id="findTicketsByString" resultType="com.hqu.domain.Ticket">
+        select * from V_Ticket
+        <where>        	
+        	<if test ="#{param1.FCSJ}!=''">
+        		 FCSJ &gt; #{param1.FCSJ}
+        	</if>
+        	<if test ="{param2}!=''">
+        		and FCSJ &lt; #{param2}
+        	</if>   
+        	<if test ="param1.CSDM!=null and param1.CSDM!=''">
+        		and CSDM = #{param1.CSDM}
+        	</if> 
+        	<if test="param1.XLMC!=null and param1.XLMC!=''">
+        		and XLMC LIKE '%${param1.XLMC}%'
+        	</if>     	 
+        </where>
+    </select>
+    
+     <select id="findTicketsByTime" resultType="com.hqu.domain.Ticket">
+        select * from V_Ticket
+        <where>        	
+        	<if test ="#{param1.FCSJ}!=''">
+        		 FCSJ &gt; #{param1.FCSJ}
+        	</if>
+        	<if test ="{param2}!=''">
+        		and FCSJ &lt; #{param2}
+        	</if>   	 
+        	<if test="param1.XLDM!=null and param1.XLDM!=''">
+        		and XLDM = #{param1.XLDM}
+        	</if>   
+        </where>
+    </select>
+    
+    
+<select id="selectTicketByPK" resultType="com.hqu.domain.Ticket" >
+		select *  from V_Ticket where BCDM=#{BCDM}
+	</select>
+	<select id="selectOrderByBCDM" resultType="com.hqu.domain.Ticket" >
+		select *  from T_Order where BCDM=#{BCDM} and (DDZTDM='2'  or DDZTDM='4'or DDZTDM='3')
+	</select>
+		<update  id="updateTicket"  parameterType="com.hqu.domain.Ticket" >
+		update T_Schedule
+		<set>
+			
+		
+			<if test="QCPJ != null">
+				QCPJ = #{QCPJ},
+			</if> 	                  
+			
+		</set>
+		where BCDM = #{BCDM}
+	</update>
+	
+	
+		<update  id="updateWeekTicket"  parameterType="com.hqu.domain.Ticket" >
+		update T_Schedule
+		<set>
+			
+		
+			<if test="ZPJG != null">
+				ZPJG = #{ZPJG},
+			</if> 	                  
+			<if test="YPJG != null">
+				YPJG = #{YPJG},
+			</if> 	
+		</set>
+		where BCDM = #{BCDM}
+	</update>
+	
+</mapper>

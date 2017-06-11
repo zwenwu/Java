@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hqu.dao.FeedBackDao">
+
+	<select id="selectByConditions" parameterType="java.util.Map" resultType="com.hqu.domain.FeedBack">
+		select * from V_FeedBack where 1=1
+ 	<if test="FSR!=null and FSR != '' ">
+       		and FSR LIKE '%${FSR}%'
+     </if>
+     <if test="KSSJ != null and KSSJ != '' ">
+     	and FSSJ &gt; #{KSSJ}
+     </if>
+	<if test="JSSJ != null and JSSJ != '' ">
+		and FSSJ &lt; #{JSSJ}
+	</if> 
+	  <if test="FKLXDM!=null and FKLXDM != '-1'.toString()">
+     	and FKLXDM = #{FKLXDM}
+     </if>
+	</select>
+	
+	<select id="selectFeedBackByPK" parameterType="java.lang.String" resultType="com.hqu.domain.FeedBack" >
+		select *  from V_FeedBack where FKYJLSH = #{FKYJLSH}
+	</select>
+	
+	<select id="selectFeedBackType" resultType="com.hqu.domain.FeedBackType" >
+		select *  from T_FeedBack_C
+	</select>
+	
+	<update  id="replyFeedBack"  parameterType="com.hqu.domain.FeedBack" >
+		update T_FeedBack 
+		<set>
+			<if test="HFR != null">
+				HFR = #{HFR},
+			</if>
+			<if test="HFSJ != null">
+				HFSJ = #{HFSJ},
+			</if>
+			<if test="HFNR != null">
+				HFNR = #{HFNR},
+			</if>
+		</set>
+		where FKYJLSH = #{FKYJLSH}
+	</update>
+	<insert id="insertFeedBack"  parameterType="com.hqu.domain.FeedBack">
+		insert into T_FeedBack (FKLXDM,FSSJ,FSNR,FSR)
+		values (#{FKLXDM,jdbcType=VARCHAR},#{FSSJ},#{FSNR,jdbcType=VARCHAR},#{FSR,jdbcType=VARCHAR})
+	</insert>
+	<select id="selectFeedBackByFSR"  resultType="com.hqu.domain.FeedBack" >
+		select *  from V_FeedBack where FSR = #{param1} limit #{param2},#{param3}   
+	</select>
+	<select id="selectFeedBackCount" parameterType="java.lang.String" resultType="int" >
+		select count(*)  from V_FeedBack where FSR = #{FSR}
+	</select>
+	
+</mapper>

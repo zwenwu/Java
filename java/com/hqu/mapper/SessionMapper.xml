@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hqu.dao.UserSessionDao">
+	 <insert id="insertUserSession">
+	     insert into T_UserSession (sessionid,YHZH,expire) values(#{sessionid},#{YHZH},#{expire})
+	 </insert>   
+	 <select id="selectUserSession" resultType="com.hqu.domain.UserSession">
+	     select * from T_UserSession where YHZH = #{YHZH}
+	 </select>
+	 <update id="updateUserSession">
+	     update T_UserSession 
+	     <set>
+	         <if test="expire!=null and expire !=''">
+	             expire = #{expire},
+	         </if>
+	         <if test="sessionid !=null and sessionid!=''">
+	             sessionid = #{sessionid},
+	         </if>
+	     </set>
+	     where YHZH = #{YHZH}
+	 </update>
+</mapper>

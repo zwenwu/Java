@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hqu.dao.PassengerDao">
+	<insert id="insertPassenger" parameterType="com.hqu.domain.Passenger">
+		insert into T_Passenger(YHZH,CKXM,YDDH,XBDM,CSDM,YX,DQJF,QBJF,CKZTDM,CKJBDM,ZCSJ)
+	    values (#{YHZH,jdbcType=VARCHAR}, #{CKXM,jdbcType=VARCHAR},
+		#{YDDH,jdbcType=VARCHAR},
+		#{XBDM,jdbcType=CHAR}, #{CSDM,jdbcType=CHAR},#{YX,jdbcType=VARCHAR},
+		#{DQJF,jdbcType=DECIMAL},#{QBJF,jdbcType=DECIMAL},#{CKZTDM,jdbcType=CHAR},
+		#{CKJBDM,jdbcType=CHAR},#{ZCSJ})
+	</insert>
+	<update id="updatePassenger" parameterType="com.hqu.domain.Passenger">
+		update T_Passenger
+		<set>
+		        <if test="CKXM != null">
+					CKXM = #{CKXM,jdbcType=VARCHAR},
+				</if>
+				<if test="YDDH != null">
+					YDDH = #{YDDH,jdbcType=VARCHAR},
+				</if>
+				<if test="XBDM != null">
+					XBDM = #{XBDM,jdbcType=CHAR},
+				</if>
+				<if test="CSDM != null">
+					CSDM = #{CSDM,jdbcType=CHAR},
+				</if>
+				<if test="YX != null">
+					YX = #{YX,jdbcType=CHAR},
+				</if>
+		</set>
+		where YHZH = #{YHZH}
+	</update>
+	
+	<select id="selectPassenger" parameterType="String" resultType = "com.hqu.domain.Passenger">
+	    select * from T_Passenger WHERE YHZH =#{YHZH}
+	</select>
+	
+	<select id="selectAllPassenger" resultType="com.hqu.domain.Passenger">
+	    select * from V_Passenger
+	</select>
+	
+	<select id="selectPassengerByString" resultType="com.hqu.domain.Passenger">
+	    select * from V_Passenger
+	    <where>
+	        1=1
+	        <if test="YHZH!=null and YHZH!=''">
+	            and YHZH LIKE '%${YHZH}%'
+	        </if>
+	        <if test="YDDH!=null and YDDH!=''">
+	            and YDDH LIKE '%${YDDH}%'
+	        </if>
+	        <if test="CKXM!=null and CKXM!=''">
+	            and CKXM LIKE '%${CKXM}%'
+	        </if>
+	        <if test="CKZTDM!=null and CKZTDM!=''">
+	            and CKZTDM = #{CKZTDM}
+	        </if>
+	        <if test="CKJBDM!=null and CKJBDM!=''">
+	            and CKJBDM = #{CKJBDM}
+	        </if>
+	        <if test="ZCSJ!=null and ZCSJ!=''">
+	            and ZCSJ &lt; #{endTime}
+	        </if>
+	        <if test="ZCSJ!=null and ZCSJ!=''">
+	            and ZCSJ &gt; #{startTime}
+	        </if>
+	    </where>
+	</select>
+	
+	<delete id="deletePassenger" parameterType="String">
+	    delete from T_Passenger where YHZH = #{YHZH} 
+	</delete>
+	
+	<select id="selectViewPassenger" resultType="com.hqu.domain.Passenger">
+	    select * from V_Passenger where YHZH=#{YHZH}
+	</select>
+	<select id="selectPassCoutByString" resultType="java.lang.Integer">
+	    select count(YHZH) from T_Passenger 
+	    <where>
+	        1=1
+	        <if test="endTime!=null and endTime!=''">
+	            and ZCSJ &lt; #{endTime}
+	        </if>
+	        <if test="startTime!=null and startTime!=''">
+	            and ZCSJ &gt; #{startTime}
+	        </if>
+	    </where>
+	</select>
+	
+	<select id="selectPassengerByHighString" resultType="com.hqu.domain.Passenger">
+	    select * from V_Passenger
+	    <where>
+	        1=1
+	        <if test="YHZH!=null and YHZH!='' and likeYHZH =='0'.toString()">
+	            and YHZH LIKE '%${YHZH}%'
+	            </if>
+	        <if test="YHZH!=null and YHZH!='' and likeYHZH =='1'.toString()">
+	            and YHZH NOT LIKE '%${YHZH}%'
+	            </if>
+	        
+	        <if test="YDDH!=null and YDDH!='' and likeYDDH =='0'.toString()">
+	            and YDDH LIKE '%${YDDH}%'
+	        </if>
+	        <if test="YDDH!=null and YDDH!='' and likeYDDH =='1'.toString()">
+	            and YDDH NOT LIKE '%${YDDH}%'
+	        </if>
+	        <if test="CKXM!=null and CKXM!='' and likeCKXM =='0'.toString()">
+	            and CKXM LIKE '%${CKXM}%'
+	        </if>
+	        <if test="CKXM!=null and CKXM!='' and likeCKXM =='1'.toString()">
+	            and CKXM NOT LIKE '%${CKXM}%'
+	        </if>
+	        <if test="XBDM!=null and XBDM!='' and isSex =='0'.toString()">
+	            and XBDM = #{XBDM}
+	        </if>
+	         <if test="XBDM!=null and XBDM!='' and isSex =='1'.toString()">
+	            and XBDM != #{XBDM}
+	        </if>
+	        <if test="CSDM!=null and CSDM!=''  and isCity =='0'.toString()">
+	            and CSDM = #{CSDM}
+	        </if>
+	        <if test="CSDM!=null and CSDM!='' and isCity =='1'.toString()">
+	            and CSDM != #{CSDM}
+	        </if>
+	        <if test="YX!=null and YX!='' and likeYX =='0'.toString()">
+	            and YX LIKE '%${YX}%'
+	        </if>
+	         <if test="YX!=null and YX!='' and likeYX =='1'.toString()">
+	            and YX NOT LIKE '%${YX}%'
+	        </if>
+	        <if test="DQJF!=null and DQJF!='' and moreorlessDQJF=='0'.toString()">
+	            and DQJF &lt; ${DQJF}
+	        </if>
+	        <if test="DQJF!=null and DQJF!='' and moreorlessDQJF=='1'.toString()">
+	            and DQJF &lt;= ${DQJF}
+	        </if>
+	        <if test="DQJF!=null and DQJF!='' and moreorlessDQJF=='2'.toString()">
+	            and DQJF = ${DQJF}
+	        </if>
+	        <if test="DQJF!=null and DQJF!='' and moreorlessDQJF=='3'.toString()">
+	            and DQJF != ${DQJF}
+	        </if>
+	        <if test="DQJF!=null and DQJF!='' and moreorlessDQJF=='4'.toString()">
+	            and DQJF &gt; ${DQJF}
+	        </if>
+	        <if test="DQJF!=null and DQJF!='' and moreorlessDQJF=='5'.toString()">
+	            and DQJF &gt;= ${DQJF}
+	        </if>
+	        <if test="QBJF!=null and QBJF!='' and moreorlessQBJF=='0'.toString()" >
+	            and QBJF &lt; ${QBJF}
+	        </if>
+	        <if test="QBJF!=null and QBJF!='' and moreorlessQBJF=='1'.toString()" >
+	            and QBJF &lt;= ${QBJF}
+	        </if>
+	        <if test="QBJF!=null and QBJF!='' and moreorlessQBJF=='2'.toString()" >
+	            and QBJF = ${QBJF}
+	        </if>
+	        <if test="QBJF!=null and QBJF!='' and moreorlessQBJF=='3'.toString()" >
+	            and QBJF != ${QBJF}
+	        </if>
+	        <if test="QBJF!=null and QBJF!='' and moreorlessQBJF=='4'.toString()" >
+	            and QBJF &gt; ${QBJF}
+	        </if>
+	        <if test="QBJF!=null and QBJF!='' and moreorlessQBJF=='5'.toString()" >
+	            and QBJF &gt;= ${QBJF}
+	        </if>
+	        <if test="CKZTDM!=null and CKZTDM!='' and isCKZT =='0'.toString()">
+	            and CKZTDM = #{CKZTDM}
+	        </if>
+	        <if test="CKZTDM!=null and CKZTDM!='' and isCKZT =='1'.toString()">
+	            and CKZTDM != #{CKZTDM}
+	        </if>
+	        <if test="CKJBDM!=null and CKJBDM!='' and isCKJB =='0'.toString()">
+	            and CKJBDM = #{CKJBDM}
+	        </if>
+	        <if test="CKJBDM!=null and CKJBDM!='' and isCKJB =='1'.toString()">
+	            and CKJBDM != #{CKJBDM}
+	        </if>
+	        <if test="startTime!=null and startTime!='' and endTime!=null and endTime!='' and isZCSJ =='0'.toString()">
+	        and ZCSJ &gt; #{startTime} and ZCSJ &lt; #{endTime}
+	        </if>
+	        <if test="startTime!=null and startTime!='' and endTime!=null and endTime!='' and isZCSJ =='1'.toString()">
+	        and ZCSJ &lt; #{startTime} or ZCSJ &gt; #{endTime}
+	        </if>
+	        <if test="startTime!=null and startTime!='' and isZCSJ =='2'.toString()">
+	        and ZCSJ &lt; #{startTime} 
+	        </if>
+	        <if test="endTime!=null and endTime!='' and isZCSJ =='3'.toString()">
+	        and ZCSJ &gt; #{endTime}
+	        </if>
+	    </where>
+	</select>
+	
+	<select id="selectPassengerBySQL" parameterType="String" resultType="com.hqu.domain.Passenger">
+	  select * from V_Passenger where 1=1 
+	      <if test="_parameter!=null and _parameter!=''">
+	        and ${_parameter}
+	       </if>
+	</select>
+	
+</mapper>

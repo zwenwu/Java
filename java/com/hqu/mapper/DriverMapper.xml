@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hqu.dao.DriverDao">
+
+<select id="findAllDriver" resultType="com.hqu.domain.Driver">
+        select * from V_Driver
+    </select>
+    
+  <select id="selectByConditions" parameterType="java.util.Map" resultType="com.hqu.domain.Driver">
+		select * from V_Driver where 1=1
+ 	<if test="SJXM!=null and SJXM != '' ">
+       		and SJXM LIKE '%${SJXM}%'
+     </if>
+     <if test="YDDH!=null and YDDH != '' ">
+       		and YDDH LIKE '%${YDDH}%'
+     </if>       
+    
+     <if test="SJLXDM !=null and SJLXDM != '-1'.toString()">
+     	and SJLXDM = #{SJLXDM}
+     </if>
+	  <if test="SJZTDM!=null and SJZTDM != '-1'.toString()">
+     	and SJZTDM = #{SJZTDM}
+     </if>  
+     <if test="CSDM!=null and CSDM != '-1'.toString()">
+     	and CSDM = #{CSDM}
+     </if>  
+	</select>
+	
+       
+
+
+
+    <select id="findDriverStatus" resultType ="com.hqu.domain.DriverStatus">
+    	select * from T_DriverStatus_C
+    </select>
+    <select id="findDriverType" resultType ="com.hqu.domain.DriverType">
+    	select * from T_DriverType_C
+    </select>
+   <select id="findDriverSex" resultType ="com.hqu.domain.Sex">
+    	select * from T_Sex_C
+    </select> 
+    
+    
+   <update  id="updateDriverStatus"  parameterType="com.hqu.domain.Driver" >
+		select *  from T_DriverStatus_C
+	</update>
+	
+	<update  id="updateDriverType"  parameterType="com.hqu.domain.Driver" >
+		select *  from T_DriverType_C
+	</update>
+	<update  id="updateDriverSex"  parameterType="com.hqu.domain.Driver" >
+		select *  from T_Sex_C
+	</update>
+	
+		<update  id="updateDriver"  parameterType="com.hqu.domain.Driver" >
+		update V_Driver
+		<set>
+			
+			<if test="SJXM != null">
+				SJXM = #{SJXM},
+			</if>
+			<if test="YDDH != null">
+				YDDH = #{YDDH},
+			</if>
+			<if test="CSRQ!= null and CSRQ!=''">
+				CSRQ = #{CSRQ},
+			</if>
+			<if test=" CSDM!= null">
+				CSDM = #{CSDM},
+			</if>
+			<if test="SJLXDM!= null">
+				SJLXDM = #{SJLXDM},
+			</if>
+			<if test="XBDM != null">
+				XBDM = #{XBDM},
+			</if>
+		<if test=" JLKSNF!= null and JLKSNF!=''" >
+				JLKSNF = #{JLKSNF},
+			</if>
+			<if test="SFZH != null">
+				SFZH = #{SFZH},
+			</if>
+			<if test="YX!= null">
+				YX = #{YX},
+			</if>
+		
+		<if test="SJZTDM!= null">
+				SJZTDM = #{SJZTDM},
+			</if>
+		<if test="SJZP1 != null">
+				SJZP1 = #{SJZP1},
+			</if>
+			<if test="SJZP2 != null">
+				SJZP2 = #{SJZP2},
+			</if>
+			<if test="SJZP3 != null">
+				SJZP3 = #{SJZP3},
+			</if>
+		</set>
+		where YHZH= #{YHZH}
+	</update>
+	
+	
+   <!--  <select id="selectDriverBySJXM"  parameterType="java.lang.String" resultType="com.hqu.domain.Driver"  >
+		select *  from V_Driver where SJXM=#{SJXM}
+	</select> -->
+	 <select id="selectDriverByPK"  parameterType="java.lang.String" resultType="com.hqu.domain.Driver"  >
+		select *  from V_Driver where YHZH=#{YHZH}
+	</select>
+	
+	
+	 <delete id="deleteByPrimaryKey" parameterType ="String">
+        delete from T_Driver where YHZH =#{YHZH}
+    </delete>
+    	
+	<delete id="deleteDriver" parameterType="com.hqu.domain.Driver">
+		    delete from T_Driver 
+		    where YHZH =#{YHZH}
+		    
+	</delete>
+	
+    <insert id="insertDriver"  parameterType="com.hqu.domain.Driver">
+		insert into T_Driver (YHZH,CSDM,SJXM,YDDH,CSRQ,SJLXDM,XBDM,JLKSNF,SFZH,YX,SJXJ,SJJBDM,SJZTDM,SJZP1,SJZP2,SJZP3)
+		values (#{YHZH},#{CSDM},#{SJXM},#{YDDH},#{CSRQ},#{SJLXDM},#{XBDM},#{JLKSNF},#{SFZH},#{YX},#{SJXJ},#{SJJBDM},#{SJZTDM},
+		#{SJZP1},#{SJZP2},#{SJZP3})
+	</insert>
+	
+	<select id="selectDriverbyXM" parameterType="java.lang.String"  resultType="com.hqu.domain.Driver">
+		select * from T_Driver where SJXM=#{SJXM} limit 1
+	</select>
+</mapper>
